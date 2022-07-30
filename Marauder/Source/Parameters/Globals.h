@@ -30,3 +30,15 @@ extern const juce::String hqName;
 extern const juce::String colorID;
 extern const juce::String colorName;
 
+extern const juce::String band1ID;
+extern const juce::String band1Name;
+
+extern const juce::String band2ID;
+extern const juce::String band2Name;
+
+extern const juce::String band3ID;
+extern const juce::String band3Name;
+
+extern const juce::String band4ID;
+extern const juce::String band4Name;
+

@@ -30,3 +30,16 @@ const juce::String hqName = "High Quality";
 const juce::String colorID   = "colorMenu";
 const juce::String colorName = "Color Theme";
 
+// Bands
+const juce::String band1ID = "band 1";
+const juce::String band1Name = "Band 1";
+
+const juce::String band2ID = "band 2";
+const juce::String band2Name = "Band 2";
+
+const juce::String band3ID = "band 3";
+const juce::String band3Name = "Band 3";
+
+const juce::String band4ID = "band 4";
+const juce::String band4Name = "Band 4";
+

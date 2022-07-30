@@ -5,6 +5,12 @@
               pluginName="Marauder_2.0" bundleIdentifier="com.ViatorDSP.Marauder2.0">
   <MAINGROUP id="x9l17S" name="Marauder">
     <GROUP id="{A885A062-DD29-C2F0-FBE2-DCCED685F7AE}" name="Source">
+      <GROUP id="{043B5D02-7B94-F3A0-D76D-3D365A3818E0}" name="DSP">
+        <FILE id="gPfkuU" name="MultiBandProcessor.cpp" compile="1" resource="0"
+              file="Source/DSP/MultiBandProcessor.cpp"/>
+        <FILE id="koAxsf" name="MultiBandProcessor.h" compile="0" resource="0"
+              file="Source/DSP/MultiBandProcessor.h"/>
+      </GROUP>
       <GROUP id="{2FE83AD2-635B-EB8D-FE59-EB2F84C75A5D}" name="GUI">
         <GROUP id="{C995866F-2F9E-411D-8DFC-5C7D1E8CFB44}" name="Components">
           <FILE id="yXbvf6" name="Header.cpp" compile="1" resource="0" file="Source/GUI/Components/Header.cpp"/>

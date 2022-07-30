@@ -27,6 +27,10 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     _treeState.addParameterListener(phaseID, this);
     _treeState.addParameterListener(hqID, this);
     _treeState.addParameterListener(presetID, this);
+    _treeState.addParameterListener(band1ID, this);
+    _treeState.addParameterListener(band2ID, this);
+    _treeState.addParameterListener(band3ID, this);
+    _treeState.addParameterListener(band4ID, this);
 }
 
 MarauderAudioProcessor::~MarauderAudioProcessor()
@@ -36,25 +40,35 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(phaseID, this);
     _treeState.removeParameterListener(hqID, this);
     _treeState.removeParameterListener(presetID, this);
+    _treeState.removeParameterListener(band1ID, this);
+    _treeState.removeParameterListener(band2ID, this);
+    _treeState.removeParameterListener(band3ID, this);
+    _treeState.removeParameterListener(band4ID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::createParameterLayout()
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
+    // Presets
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { presetID, 1 }, presetName, 0, 9, 0));
     
+    // IO
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { inputID, 1 }, inputName,
                                                                   juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f), 0.0f));
-    
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { outputID, 1 }, outputName,
                                                                   juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f), 0.0f));
-    
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { phaseID, 1 }, phaseName, false));
-    
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { hqID, 1 }, hqName, false));
     
+    // Colors
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { colorID, 1 }, colorName, 0, 9, 0));
+    
+    // Bands
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band1ID, 1 }, band1Name, true));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2ID, 1 }, band2Name, true));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3ID, 1 }, band3Name, true));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band4ID, 1 }, band4Name, true));
     
     return { params.begin(), params.end() };
 }
@@ -71,6 +85,7 @@ void MarauderAudioProcessor::parameterChanged(const juce::String &parameterID, f
             spec.sampleRate = getSampleRate() * _oversamplingModule.getOversamplingFactor();
             _inputGainModule.prepare(spec);
             _outputGainModule.prepare(spec);
+            _mbProcessor.prepare(spec);
         }
 
         else
@@ -78,6 +93,7 @@ void MarauderAudioProcessor::parameterChanged(const juce::String &parameterID, f
             spec.sampleRate = getSampleRate();
             _inputGainModule.prepare(spec);
             _outputGainModule.prepare(spec);
+            _mbProcessor.prepare(spec);
         }
     }
             
@@ -88,6 +104,12 @@ void MarauderAudioProcessor::updateParameters()
 {
     _inputGainModule.setGainDecibels(_treeState.getRawParameterValue(inputID)->load());
     _outputGainModule.setGainDecibels(_treeState.getRawParameterValue(outputID)->load());
+    
+    // Bands
+    _mbProcessor.toggleBand1(_treeState.getRawParameterValue(band1ID)->load());
+    _mbProcessor.toggleBand2(_treeState.getRawParameterValue(band2ID)->load());
+    _mbProcessor.toggleBand3(_treeState.getRawParameterValue(band3ID)->load());
+    _mbProcessor.toggleBand4(_treeState.getRawParameterValue(band4ID)->load());
 }
 
 //==============================================================================
@@ -177,6 +199,7 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     // DSP
     _inputGainModule.prepare(spec);
     _outputGainModule.prepare(spec);
+    _mbProcessor.prepare(spec);
     
     // Init params
     updateParameters();
@@ -242,6 +265,8 @@ void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)
     // Input
     _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
     
+    _mbProcessor.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
+    
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
     
@@ -264,6 +289,8 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
 
     // Input
     _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
+    
+    _mbProcessor.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));

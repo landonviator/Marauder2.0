@@ -1,6 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "Parameters/Globals.h"
+#include "DSP/MultiBandProcessor.h"
 
 //==============================================================================
 /**
@@ -76,6 +77,7 @@ private:
     juce::dsp::Gain<float> _inputGainModule;
     juce::dsp::Gain<float> _outputGainModule;
     juce::dsp::Oversampling<float> _oversamplingModule;
+    MultiBandProcessor<float> _mbProcessor;
     void hqProcessBlock(juce::AudioBuffer<float>& buffer);
     void normalProcessBlock(juce::AudioBuffer<float>& buffer);
     bool hqToggle;
