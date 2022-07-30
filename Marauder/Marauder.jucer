@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="OC3GaX" name="Marauder" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="Viator DSP"
+              pluginName="Marauder_2.0" bundleIdentifier="com.ViatorDSP.Marauder2.0">
+  <MAINGROUP id="x9l17S" name="Marauder">
+    <GROUP id="{A885A062-DD29-C2F0-FBE2-DCCED685F7AE}" name="Source">
+      <GROUP id="{2FE83AD2-635B-EB8D-FE59-EB2F84C75A5D}" name="GUI">
+        <GROUP id="{C995866F-2F9E-411D-8DFC-5C7D1E8CFB44}" name="Components">
+          <FILE id="yXbvf6" name="Header.cpp" compile="1" resource="0" file="Source/GUI/Components/Header.cpp"/>
+          <FILE id="jZso9F" name="Header.h" compile="0" resource="0" file="Source/GUI/Components/Header.h"/>
+          <FILE id="El57Lx" name="IOModule.cpp" compile="1" resource="0" file="Source/GUI/Components/IOModule.cpp"/>
+          <FILE id="oBYzGh" name="IOModule.h" compile="0" resource="0" file="Source/GUI/Components/IOModule.h"/>
+          <FILE id="Tfd1JU" name="SettingsPage.cpp" compile="1" resource="0"
+                file="Source/GUI/Components/SettingsPage.cpp"/>
+          <FILE id="XihE98" name="SettingsPage.h" compile="0" resource="0" file="Source/GUI/Components/SettingsPage.h"/>
+        </GROUP>
+        <GROUP id="{F94BBE4D-4B00-D271-12FD-15AFB996A60B}" name="LookAndFeel">
+          <FILE id="tx8Elk" name="Buttons.cpp" compile="1" resource="0" file="Source/GUI/LookAndFeel/Buttons.cpp"/>
+          <FILE id="MXXzVP" name="Buttons.h" compile="0" resource="0" file="Source/GUI/LookAndFeel/Buttons.h"/>
+          <FILE id="LJdmpJ" name="FullDial.cpp" compile="1" resource="0" file="Source/GUI/LookAndFeel/FullDial.cpp"/>
+          <FILE id="lvSOhv" name="FullDial.h" compile="0" resource="0" file="Source/GUI/LookAndFeel/FullDial.h"/>
+          <FILE id="mvq7ww" name="MenuLAF.cpp" compile="1" resource="0" file="Source/GUI/LookAndFeel/MenuLAF.cpp"/>
+          <FILE id="yJMZJy" name="MenuLAF.h" compile="0" resource="0" file="Source/GUI/LookAndFeel/MenuLAF.h"/>
+          <FILE id="HD8hWG" name="PanelLAF.cpp" compile="1" resource="0" file="Source/GUI/LookAndFeel/PanelLAF.cpp"/>
+          <FILE id="VonWRr" name="PanelLAF.h" compile="0" resource="0" file="Source/GUI/LookAndFeel/PanelLAF.h"/>
+        </GROUP>
+        <GROUP id="{1ECCB686-85C9-2FF3-28E1-AB02A46EB4DD}" name="UI-Methods">
+          <GROUP id="{EE429CD4-D6EA-B5CD-2219-C1608E30CCB1}" name="Buttons"/>
+          <FILE id="GVmNsa" name="Themes.cpp" compile="1" resource="0" file="Source/GUI/UI-Methods/Themes.cpp"/>
+          <FILE id="KjtbAR" name="UI-Constructor.cpp" compile="1" resource="0"
+                file="Source/GUI/UI-Methods/UI-Constructor.cpp"/>
+          <FILE id="AZRMkA" name="UI-InitWindow.cpp" compile="1" resource="0"
+                file="Source/GUI/UI-Methods/UI-InitWindow.cpp"/>
+          <FILE id="FbQBLY" name="UI-Paint.cpp" compile="1" resource="0" file="Source/GUI/UI-Methods/UI-Paint.cpp"/>
+          <FILE id="ih0BXx" name="UI-Resized.cpp" compile="1" resource="0" file="Source/GUI/UI-Methods/UI-Resized.cpp"/>
+          <FILE id="vK60iY" name="UI-SaveWindow.cpp" compile="1" resource="0"
+                file="Source/GUI/UI-Methods/UI-SaveWindow.cpp"/>
+        </GROUP>
+      </GROUP>
+      <GROUP id="{BD4B48E8-251C-11C1-9C30-27B3AB1B9B85}" name="Parameters">
+        <FILE id="AeiDVw" name="Globals.cpp" compile="1" resource="0" file="Source/Parameters/Globals.cpp"/>
+        <FILE id="lajxz3" name="Globals.h" compile="0" resource="0" file="Source/Parameters/Globals.h"/>
+      </GROUP>
+      <GROUP id="{C04B4AE1-4F0C-0FCE-2497-D2CB435E2C73}" name="Assets">
+        <FILE id="oF20BK" name="button_middle_off.png" compile="0" resource="1"
+              file="Source/Assets/button_middle_off.png"/>
+        <FILE id="bi3wX8" name="button_middle_on.png" compile="0" resource="1"
+              file="Source/Assets/button_middle_on.png"/>
+        <FILE id="bkp47Q" name="Knob_01.png" compile="0" resource="1" file="Source/Assets/Knob_01.png"/>
+        <FILE id="NtM98w" name="Knob_03.png" compile="0" resource="1" file="Source/Assets/Knob_03.png"/>
+        <FILE id="ohUtnu" name="Knob_04.png" compile="0" resource="1" file="Source/Assets/Knob_04.png"/>
+        <FILE id="Jlc1yY" name="landon55-04.png" compile="0" resource="1" file="Source/Assets/landon55-04.png"/>
+        <FILE id="ts7M7i" name="led_off.png" compile="0" resource="1" file="Source/Assets/led_off.png"/>
+        <FILE id="BMJFOL" name="led_on.png" compile="0" resource="1" file="Source/Assets/led_on.png"/>
+      </GROUP>
+      <FILE id="JjAIio" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="Y2dMot" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="U7gMCY" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="Y65qq7" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Marauder"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Marauder"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
+        <MODULEPATH id="viator_modules" path="../../viatordsp/viator_modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="viator_modules" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
+  </MODULES>
+</JUCERPROJECT>
