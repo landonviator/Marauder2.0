@@ -255,6 +255,7 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     _inputGainModule.prepare(spec);
     _outputGainModule.prepare(spec);
     _marauder.prepare(spec);
+    _brickWallFilter.prepare(spec);
     
     // Init params
     updateParameters();
@@ -307,6 +308,7 @@ void MarauderAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 //    }
     
     _marauder.processBuffer(buffer);
+    _brickWallFilter.processBuffer(buffer);
 }
 
 void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)

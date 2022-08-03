@@ -11,13 +11,8 @@ void viator_dsp::Marauder<SampleType>::prepare(const juce::dsp::ProcessSpec& spe
     _currentSampleRate = spec.sampleRate;
     _mbProcessor.prepare(spec);
     
-    _leftAliasFilter.prepare(spec);
-    _leftAliasFilter.setType(juce::dsp::LinkwitzRileyFilter<float>::Type::lowpass);
-    _leftAliasFilter.setCutoffFrequency(_resample.getNextValue() * 882 * 0.5);
-    
-    _rightAliasFilter.prepare(spec);
-    _rightAliasFilter.setType(juce::dsp::LinkwitzRileyFilter<float>::Type::lowpass);
-    _rightAliasFilter.setCutoffFrequency(_resample.getNextValue() * 882 * 0.5);
+    _aliasFilter.prepare(spec);
+    _aliasFilter.setCutoff(_resample.getNextValue() * 882 * 0.5);
     
     reset();
 }

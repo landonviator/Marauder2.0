@@ -78,6 +78,7 @@ private:
     juce::dsp::Gain<float> _outputGainModule;
     juce::dsp::Oversampling<float> _oversamplingModule;
     viator_dsp::Marauder<float> _marauder;
+    viator_dsp::BrickWallLPF<float> _brickWallFilter;
     void hqProcessBlock(juce::AudioBuffer<float>& buffer);
     void normalProcessBlock(juce::AudioBuffer<float>& buffer);
     bool hqToggle;

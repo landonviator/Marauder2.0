@@ -54,22 +54,9 @@ public:
                 
                 _wetSignal -= remainder;
                 
-                // Remove content above nyquist of the resampler
-                _leftAliasFilter.setCutoffFrequency(_resample.getNextValue() * 882 * 0.5);
-                _rightAliasFilter.setCutoffFrequency(_resample.getNextValue() * 882 * 0.5);
-                
-                if (_resample.getNextValue() > 49)
-                {
-                    if (ch == 0)
-                    {
-                        _wetSignal = _leftAliasFilter.processSample(ch, _wetSignal);
-                    }
-                    
-                    else if (ch == 1)
-                    {
-                        _wetSignal = _rightAliasFilter.processSample(ch, _wetSignal);
-                    }
-                }
+                // Block aliasing
+                _aliasFilter.setCutoff(_resample.getNextValue() * 882 * 0.5);
+                _wetSignal = _aliasFilter.processSample(_wetSignal, ch);
                 
                 // Resampler
                 if (rateDivide > 1)
@@ -123,8 +110,7 @@ private:
     juce::NormalisableRange<float> _bitRateRange;
     
     viator_dsp::MultiBandProcessor<float> _mbProcessor;
-    juce::dsp::LinkwitzRileyFilter<float> _leftAliasFilter;
-    juce::dsp::LinkwitzRileyFilter<float> _rightAliasFilter;
+    viator_dsp::BrickWallLPF<float> _aliasFilter;
 };
 }
 #endif /* Marauder_h */
