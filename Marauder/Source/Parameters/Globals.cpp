@@ -70,5 +70,8 @@ extern const juce::String bitDepth1Name = "Bit Depth 1";
 extern const juce::String resampleRateID = "resampleRate";
 extern const juce::String resampleRateName = "Resample Rate";
 
+extern const juce::String driveID = "drive";
+extern const juce::String driveName = "Drive";
+
 extern const juce::String masterMixID = "masterMix";
 extern const juce::String masterMixName = "Master Mix";

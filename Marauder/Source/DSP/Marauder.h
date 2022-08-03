@@ -29,34 +29,23 @@ public:
                 // Divide into bands
                 _mbProcessor.processSample(data[ch][sample], ch);
                 
-                auto rateDivide = static_cast<int> (_resample.getNextValue());
-                
                 // Dry signal
                 float _drySignal = data[ch][sample];
-                
-                // Reduce bit depth
-                float totalQLevels = std::powf(2, _bitDepth.getNextValue());
                 
                 // Wet signals
                 float lowBand = _mbProcessor.getLowBand() * _lowMix.getNextValue();
                 float lowMidBand = _mbProcessor.getLowMidBand() * _lowMidMix.getNextValue();
                 float midBand = _mbProcessor.getMidBand() * _midMix.getNextValue();
                 float highBand = _mbProcessor.getHighBand() * _highMix.getNextValue();
-                float _wetSignal = lowBand + lowMidBand + midBand + highBand;
-                
-                _wetSignal = 0.5 * _wetSignal + 0.5;
+                _wetSignal = (lowBand + lowMidBand + midBand + highBand) * 0.5 + 0.5;
                 
                 _wetSignal = totalQLevels * _wetSignal;
-                
+
                 _wetSignal = (std::round(_wetSignal) / totalQLevels) * 2 - 1;
-                
-                float remainder = std::fmodf(_wetSignal, 1.0 / totalQLevels);
-                
+
+                remainder = std::fmodf(_wetSignal, 1.0 / totalQLevels);
+
                 _wetSignal -= remainder;
-                
-                // Block aliasing
-                _aliasFilter.setCutoff(_resample.getNextValue() * 882 * 0.5);
-                _wetSignal = _aliasFilter.processSample(_wetSignal, ch);
                 
                 // Resampler
                 if (rateDivide > 1)
@@ -65,6 +54,12 @@ public:
                     {
                         _wetSignal = data[ch][sample - sample % rateDivide];
                     }
+                }
+                
+                // Lofi distortion
+                if (_wetSignal < 0)
+                {
+                    _wetSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
                 }
                 
                 data[ch][sample] = (1.0 - _mix.getNextValue()) * _drySignal + _wetSignal * _mix.getNextValue();
@@ -89,11 +84,12 @@ public:
     void setMidMix(SampleType newMix);
     void setHighMix(SampleType newMix);
     
+    void setDrive(SampleType newDrive);
     void setMasterMix(SampleType newMix);
     
 private:
     juce::SmoothedValue<float> _drive;
-    juce::SmoothedValue<float> _bitDepth;
+    int _bitDepth;
     juce::SmoothedValue<float> _mix;
     juce::SmoothedValue<float> _output;
     juce::SmoothedValue<float> _resample;
@@ -103,14 +99,17 @@ private:
     juce::SmoothedValue<float> _midMix;
     juce::SmoothedValue<float> _highMix;
     
+    int rateDivide;
+    float totalQLevels;
+    float _wetSignal;
+    float remainder;
+    
     float _currentSampleRate;
-    int _previousSample = 0;
     float _rateDivide;
     
     juce::NormalisableRange<float> _bitRateRange;
     
     viator_dsp::MultiBandProcessor<float> _mbProcessor;
-    viator_dsp::BrickWallLPF<float> _aliasFilter;
 };
 }
 #endif /* Marauder_h */

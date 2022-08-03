@@ -41,9 +41,10 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     _treeState.addParameterListener(band2CutoffID, this);
     _treeState.addParameterListener(band3CutoffID, this);
     
-    // Crushers
+    // Crusher
     _treeState.addParameterListener(bitDepth1ID, this);
     _treeState.addParameterListener(resampleRateID, this);
+    _treeState.addParameterListener(driveID, this);
     _treeState.addParameterListener(masterMixID, this);
 }
 
@@ -68,9 +69,10 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(band2CutoffID, this);
     _treeState.removeParameterListener(band3CutoffID, this);
     
-    // Crushers
+    // Crusher
     _treeState.removeParameterListener(bitDepth1ID, this);
     _treeState.removeParameterListener(resampleRateID, this);
+    _treeState.removeParameterListener(driveID, this);
     _treeState.removeParameterListener(masterMixID, this);
 }
 
@@ -106,11 +108,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2CutoffID, 1 }, band2CutoffName, cutoffRange, 500.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3CutoffID, 1 }, band3CutoffName, cutoffRange, 2000.0f));
     
-    // Crushers
+    // Crusher
     auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
     bitDepthRange.setSkewForCentre(5.0);
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 24.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 50.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0.0f, 1.0f, 1.0f));
     
     return { params.begin(), params.end() };
@@ -164,6 +167,9 @@ void MarauderAudioProcessor::updateParameters()
     auto rate = juce::jmap(_treeState.getRawParameterValue(resampleRateID)->load(), 1.0f, 50.0f, 50.0f, 1.0f);
     _marauder.setResampledRate(rate);
     
+    _aliasFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.5);
+    _artifactFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.5);
+    _marauder.setDrive(_treeState.getRawParameterValue(driveID)->load());
     _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load());
 }
 
@@ -255,7 +261,8 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     _inputGainModule.prepare(spec);
     _outputGainModule.prepare(spec);
     _marauder.prepare(spec);
-    _brickWallFilter.prepare(spec);
+    _aliasFilter.prepare(spec);
+    _artifactFilter.prepare(spec);
     
     // Init params
     updateParameters();
@@ -307,8 +314,9 @@ void MarauderAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 //        normalProcessBlock(buffer);
 //    }
     
+    _aliasFilter.processBuffer(buffer);
     _marauder.processBuffer(buffer);
-    _brickWallFilter.processBuffer(buffer);
+    _artifactFilter.processBuffer(buffer);
 }
 
 void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)

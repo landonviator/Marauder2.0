@@ -69,5 +69,8 @@ extern const juce::String bitDepth1Name;
 extern const juce::String resampleRateID;
 extern const juce::String resampleRateName;
 
+extern const juce::String driveID;
+extern const juce::String driveName;
+
 extern const juce::String masterMixID;
 extern const juce::String masterMixName;

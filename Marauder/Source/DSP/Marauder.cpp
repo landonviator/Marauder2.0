@@ -11,9 +11,6 @@ void viator_dsp::Marauder<SampleType>::prepare(const juce::dsp::ProcessSpec& spe
     _currentSampleRate = spec.sampleRate;
     _mbProcessor.prepare(spec);
     
-    _aliasFilter.prepare(spec);
-    _aliasFilter.setCutoff(_resample.getNextValue() * 882 * 0.5);
-    
     reset();
 }
 
@@ -24,8 +21,6 @@ void viator_dsp::Marauder<SampleType>::reset() noexcept
     {
         _drive.reset(_currentSampleRate, 0.02);
         _drive.setTargetValue(1.0);
-        _bitDepth.reset(_currentSampleRate, 0.02);
-        _bitDepth.setTargetValue(24.0);
         _resample.reset(_currentSampleRate, 0.02);
         _resample.setTargetValue(50.0);
         _mix.reset(_currentSampleRate, 0.02);
@@ -38,13 +33,17 @@ void viator_dsp::Marauder<SampleType>::reset() noexcept
 template <typename SampleType>
 void viator_dsp::Marauder<SampleType>::setBitDepth(SampleType newBitDepth)
 {
-    _bitDepth.setTargetValue(newBitDepth);
+    _bitDepth = newBitDepth;
+    
+    // Reduce bit depth
+    totalQLevels = viator_utils::FastMath::fastPow(2, _bitDepth);
 }
 
 template <typename SampleType>
 void viator_dsp::Marauder<SampleType>::setResampledRate(SampleType newResampleRate)
 {
     _resample.setTargetValue(newResampleRate);
+    rateDivide = static_cast<int> (newResampleRate);
 }
 
 template <typename SampleType>
@@ -111,6 +110,12 @@ template <typename SampleType>
 void viator_dsp::Marauder<SampleType>::setHighMix(SampleType newMix)
 {
     _highMix.setTargetValue(newMix);
+}
+
+template <typename SampleType>
+void viator_dsp::Marauder<SampleType>::setDrive(SampleType newDrive)
+{
+    _drive.setTargetValue(newDrive);
 }
 
 template <typename SampleType>
