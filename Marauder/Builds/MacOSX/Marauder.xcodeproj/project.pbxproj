@@ -26,7 +26,6 @@
 /* Begin PBXBuildFile section */
 		0068DD9A0D719D9CF7350D82 /* include_juce_audio_utils.mm */ = {isa = PBXBuildFile; fileRef = FB3B5371526A7D500084B71B; };
 		0158C7E2311DB0BF67682C39 /* include_juce_gui_basics.mm */ = {isa = PBXBuildFile; fileRef = 734B9D9D5ECE159139759C72; };
-		0D3A9313CDEE4BC197A9E9AE /* MultiBandProcessor.cpp */ = {isa = PBXBuildFile; fileRef = F908257CA51E8B1E59F747B0; };
 		1123631AD5E83E3EC1A4EF09 /* include_juce_core.mm */ = {isa = PBXBuildFile; fileRef = 37D950A8CCF30D84D8D7AB9B; };
 		13914A87DED99E00AF4D8421 /* DiscRecording.framework */ = {isa = PBXBuildFile; fileRef = D3166A0E88BA3B2A3E0F4601; };
 		1C014521821910A347F32C25 /* include_juce_audio_plugin_client_Standalone.cpp */ = {isa = PBXBuildFile; fileRef = 47F9ECE024D081C033E067D0; };
@@ -73,6 +72,7 @@
 		D6965D684FFDFA53616439AC /* include_juce_audio_basics.mm */ = {isa = PBXBuildFile; fileRef = B18B942EB4983292D6EAAB72; };
 		DCAA78A90AF86110CDB12E9A /* VST3 */ = {isa = PBXBuildFile; fileRef = CE876527D934B5087C56E199; };
 		E12F11FBAD0FF5A2860BC650 /* Themes.cpp */ = {isa = PBXBuildFile; fileRef = 1D563C5E0952F7EB5D439FA8; };
+		E6A3E17BD6EAD861A5A6A018 /* Marauder.cpp */ = {isa = PBXBuildFile; fileRef = ED174C15EC79E21B181272B1; };
 		E83E4718016299613115895E /* Buttons.cpp */ = {isa = PBXBuildFile; fileRef = 77DEAC68470BE91BF68A8F96; };
 		E8B9FD5BD35BA59315A9F1BC /* include_viator_modules.cpp */ = {isa = PBXBuildFile; fileRef = 1FF8592EAB9B64479151BB09; };
 		ED7E0A9B337272D820FEBDC0 /* include_juce_audio_plugin_client_AU_1.mm */ = {isa = PBXBuildFile; fileRef = 3381FA3A7401AA61D51118D0; };
@@ -94,7 +94,6 @@
 		126BFB72EA716560F0ECEF9C /* WebKit.framework */ /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		155AAB9B51009CBCA0326F7B /* PluginProcessor.h */ /* PluginProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PluginProcessor.h; path = ../../Source/PluginProcessor.h; sourceTree = SOURCE_ROOT; };
 		15AD7FD01462D5514109A30B /* juce_dsp */ /* juce_dsp */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_dsp; path = ../../../../JUCE/modules/juce_dsp; sourceTree = SOURCE_ROOT; };
-		16DCA7040752A1649F3DE7A2 /* MultiBandProcessor.h */ /* MultiBandProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultiBandProcessor.h; path = ../../Source/DSP/MultiBandProcessor.h; sourceTree = SOURCE_ROOT; };
 		186E0E59AC04CE2C7393D772 /* Buttons.h */ /* Buttons.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Buttons.h; path = ../../Source/GUI/LookAndFeel/Buttons.h; sourceTree = SOURCE_ROOT; };
 		1D563C5E0952F7EB5D439FA8 /* Themes.cpp */ /* Themes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Themes.cpp; path = "../../Source/GUI/UI-Methods/Themes.cpp"; sourceTree = SOURCE_ROOT; };
 		1FF8592EAB9B64479151BB09 /* include_viator_modules.cpp */ /* include_viator_modules.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_viator_modules.cpp; path = ../../JuceLibraryCode/include_viator_modules.cpp; sourceTree = SOURCE_ROOT; };
@@ -109,7 +108,7 @@
 		466F1177AFD5450E7912C526 /* include_juce_audio_plugin_client_VST_utils.mm */ /* include_juce_audio_plugin_client_VST_utils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_audio_plugin_client_VST_utils.mm; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_VST_utils.mm; sourceTree = SOURCE_ROOT; };
 		47F9ECE024D081C033E067D0 /* include_juce_audio_plugin_client_Standalone.cpp */ /* include_juce_audio_plugin_client_Standalone.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_plugin_client_Standalone.cpp; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp; sourceTree = SOURCE_ROOT; };
 		4A72AB6F28BE6D7118D17C70 /* include_juce_audio_plugin_client_ARA.cpp */ /* include_juce_audio_plugin_client_ARA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = include_juce_audio_plugin_client_ARA.cpp; path = ../../JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp; sourceTree = SOURCE_ROOT; };
-		51514B80C7F8BAEF0387354D /* viator_modules */ /* viator_modules */ = {isa = PBXFileReference; lastKnownFileType = folder; name = viator_modules; path = ../../JuceLibraryCode/modules/viator_modules; sourceTree = SOURCE_ROOT; };
+		4DE81B4B84AC4A57E89C72D1 /* viator_modules */ /* viator_modules */ = {isa = PBXFileReference; lastKnownFileType = folder; name = viator_modules; path = ../../../../../../../Users/land00m/Documents/viatordsp/viator_modules; sourceTree = SOURCE_ROOT; };
 		529650F0EA00C7E1F7F8EF0B /* SettingsPage.h */ /* SettingsPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SettingsPage.h; path = ../../Source/GUI/Components/SettingsPage.h; sourceTree = SOURCE_ROOT; };
 		537579DE9E1C3183A0EF1E78 /* PluginEditor.h */ /* PluginEditor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PluginEditor.h; path = ../../Source/PluginEditor.h; sourceTree = SOURCE_ROOT; };
 		53D3C374A721CBDC3F1BB583 /* juce_audio_devices */ /* juce_audio_devices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_audio_devices; path = ../../../../JUCE/modules/juce_audio_devices; sourceTree = SOURCE_ROOT; };
@@ -138,6 +137,7 @@
 		88F7EE59545C227DB3AC7920 /* PanelLAF.h */ /* PanelLAF.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PanelLAF.h; path = ../../Source/GUI/LookAndFeel/PanelLAF.h; sourceTree = SOURCE_ROOT; };
 		902C5582DC3D7006E842165F /* BinaryData.cpp */ /* BinaryData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BinaryData.cpp; path = ../../JuceLibraryCode/BinaryData.cpp; sourceTree = SOURCE_ROOT; };
 		920E58C6B5F6C9D00BBAB6F8 /* CoreAudio.framework */ /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		921068D84D39D7A8E471DC3C /* Marauder.h */ /* Marauder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Marauder.h; path = ../../Source/DSP/Marauder.h; sourceTree = SOURCE_ROOT; };
 		95AFA00446E7E135AFE0B3C5 /* JuceHeader.h */ /* JuceHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JuceHeader.h; path = ../../JuceLibraryCode/JuceHeader.h; sourceTree = SOURCE_ROOT; };
 		98B40C1FAC1AE6CD2809DF84 /* UI-InitWindow.cpp */ /* UI-InitWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "UI-InitWindow.cpp"; path = "../../Source/GUI/UI-Methods/UI-InitWindow.cpp"; sourceTree = SOURCE_ROOT; };
 		98E9EE26EB56A2090D7E93F5 /* IOKit.framework */ /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -176,6 +176,7 @@
 		E47B06FE1528205EEE97AB15 /* Knob_01.png */ /* Knob_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Knob_01.png; path = ../../Source/Assets/Knob_01.png; sourceTree = SOURCE_ROOT; };
 		E5B400B616B9E04682EEA5E6 /* FullDial.h */ /* FullDial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FullDial.h; path = ../../Source/GUI/LookAndFeel/FullDial.h; sourceTree = SOURCE_ROOT; };
 		E61638D62174DE092553A7E3 /* include_juce_gui_extra.mm */ /* include_juce_gui_extra.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_gui_extra.mm; path = ../../JuceLibraryCode/include_juce_gui_extra.mm; sourceTree = SOURCE_ROOT; };
+		ED174C15EC79E21B181272B1 /* Marauder.cpp */ /* Marauder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Marauder.cpp; path = ../../Source/DSP/Marauder.cpp; sourceTree = SOURCE_ROOT; };
 		ED411B51BFA9C436E43B4FF6 /* juce_gui_basics */ /* juce_gui_basics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = juce_gui_basics; path = ../../../../JUCE/modules/juce_gui_basics; sourceTree = SOURCE_ROOT; };
 		EED3F1ED78A5E365A1A8E87C /* MenuLAF.cpp */ /* MenuLAF.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MenuLAF.cpp; path = ../../Source/GUI/LookAndFeel/MenuLAF.cpp; sourceTree = SOURCE_ROOT; };
 		F008AECAA4D730D752C6394E /* AudioUnit.framework */ /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
@@ -183,7 +184,6 @@
 		F55D158E106170FADE4C5E64 /* button_middle_off.png */ /* button_middle_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_middle_off.png; path = ../../Source/Assets/button_middle_off.png; sourceTree = SOURCE_ROOT; };
 		F7C7CD2A85DF0B11454D4A39 /* button_middle_on.png */ /* button_middle_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button_middle_on.png; path = ../../Source/Assets/button_middle_on.png; sourceTree = SOURCE_ROOT; };
 		F838817192D0CDC82F4A9929 /* include_juce_graphics.mm */ /* include_juce_graphics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_graphics.mm; path = ../../JuceLibraryCode/include_juce_graphics.mm; sourceTree = SOURCE_ROOT; };
-		F908257CA51E8B1E59F747B0 /* MultiBandProcessor.cpp */ /* MultiBandProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MultiBandProcessor.cpp; path = ../../Source/DSP/MultiBandProcessor.cpp; sourceTree = SOURCE_ROOT; };
 		F9D8569D7C67EEB747A5FD61 /* Foundation.framework */ /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FB0426541E594E47F0155BCE /* SettingsPage.cpp */ /* SettingsPage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SettingsPage.cpp; path = ../../Source/GUI/Components/SettingsPage.cpp; sourceTree = SOURCE_ROOT; };
 		FB3B5371526A7D500084B71B /* include_juce_audio_utils.mm */ /* include_juce_audio_utils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_audio_utils.mm; path = ../../JuceLibraryCode/include_juce_audio_utils.mm; sourceTree = SOURCE_ROOT; };
@@ -276,8 +276,8 @@
 		4AF3691ACDB4A44F1977C562 /* DSP */ = {
 			isa = PBXGroup;
 			children = (
-				F908257CA51E8B1E59F747B0,
-				16DCA7040752A1649F3DE7A2,
+				ED174C15EC79E21B181272B1,
+				921068D84D39D7A8E471DC3C,
 			);
 			name = DSP;
 			sourceTree = "<group>";
@@ -396,7 +396,7 @@
 				D732EA7C44808E03B960F5BC,
 				ED411B51BFA9C436E43B4FF6,
 				879C9F7A6C8964B1DB83E059,
-				51514B80C7F8BAEF0387354D,
+				4DE81B4B84AC4A57E89C72D1,
 			);
 			name = "JUCE Modules";
 			sourceTree = "<group>";
@@ -733,7 +733,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0D3A9313CDEE4BC197A9E9AE,
+				E6A3E17BD6EAD861A5A6A018,
 				4B30F20D79F0914E300803E7,
 				D313CFCCAD2CBD87C4B078B1,
 				BCFC1A2C83FD2DA74D8A69CE,
@@ -925,7 +925,7 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -934,7 +934,7 @@
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-bundle -lMarauder -weak_framework Metal -weak_framework MetalKit";
 				OTHER_REZFLAGS = "-d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -d arm64_$arm64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I \"$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase\" -I \"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioUnit.framework/Headers\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
@@ -1042,14 +1042,14 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-weak_framework Metal -weak_framework MetalKit";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
 				PRODUCT_NAME = "Marauder";
@@ -1158,7 +1158,7 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -1168,7 +1168,7 @@
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-bundle -lMarauder -weak_framework Metal -weak_framework MetalKit";
 				OTHER_REZFLAGS = "-d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -d arm64_$arm64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I \"$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase\" -I \"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioUnit.framework/Headers\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
@@ -1375,7 +1375,7 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -1384,7 +1384,7 @@
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/VST3/";
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-bundle -lMarauder -weak_framework Metal -weak_framework MetalKit";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
 				PRODUCT_NAME = "Marauder";
@@ -1498,14 +1498,14 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info-Standalone_Plugin.plist;
 				INFOPLIST_PREPROCESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-lMarauder -weak_framework Metal -weak_framework MetalKit";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
 				PRODUCT_NAME = "Marauder";
@@ -1610,7 +1610,7 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -1618,7 +1618,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-lMarauder -weak_framework Metal -weak_framework MetalKit";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
 				PRODUCT_NAME = "Marauder";
@@ -1724,13 +1724,13 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-weak_framework Metal -weak_framework MetalKit";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
 				PRODUCT_NAME = "Marauder";
@@ -1847,7 +1847,7 @@
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"$(SRCROOT)/../../../../JUCE/modules",
-					"$(SRCROOT)/../../JuceLibraryCode/modules",
+					"$(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp",
 					"$(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -1857,7 +1857,7 @@
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../JuceLibraryCode/modules $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../../JUCE/modules/juce_audio_processors/format_types/VST3_SDK $(SRCROOT)/../../JuceLibraryCode $(SRCROOT)/../../../../JUCE/modules $(SRCROOT)/../../../../../../../Users/land00m/Documents/viatordsp $(SRCROOT)/../../../../JUCE/modules/juce_audio_plugin_client";
 				OTHER_LDFLAGS = "-bundle -lMarauder -weak_framework Metal -weak_framework MetalKit";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ViatorDSP.Marauder2.0;
 				PRODUCT_NAME = "Marauder";

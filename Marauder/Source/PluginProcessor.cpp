@@ -27,10 +27,24 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     _treeState.addParameterListener(phaseID, this);
     _treeState.addParameterListener(hqID, this);
     _treeState.addParameterListener(presetID, this);
+    
+    // Bands
     _treeState.addParameterListener(band1ID, this);
     _treeState.addParameterListener(band2ID, this);
     _treeState.addParameterListener(band3ID, this);
     _treeState.addParameterListener(band4ID, this);
+    _treeState.addParameterListener(band1MixID, this);
+    _treeState.addParameterListener(band2MixID, this);
+    _treeState.addParameterListener(band3MixID, this);
+    _treeState.addParameterListener(band4MixID, this);
+    _treeState.addParameterListener(band1CutoffID, this);
+    _treeState.addParameterListener(band2CutoffID, this);
+    _treeState.addParameterListener(band3CutoffID, this);
+    
+    // Crushers
+    _treeState.addParameterListener(bitDepth1ID, this);
+    _treeState.addParameterListener(resampleRateID, this);
+    _treeState.addParameterListener(masterMixID, this);
 }
 
 MarauderAudioProcessor::~MarauderAudioProcessor()
@@ -40,10 +54,24 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(phaseID, this);
     _treeState.removeParameterListener(hqID, this);
     _treeState.removeParameterListener(presetID, this);
+    
+    // Bands
     _treeState.removeParameterListener(band1ID, this);
     _treeState.removeParameterListener(band2ID, this);
     _treeState.removeParameterListener(band3ID, this);
     _treeState.removeParameterListener(band4ID, this);
+    _treeState.removeParameterListener(band1MixID, this);
+    _treeState.removeParameterListener(band2MixID, this);
+    _treeState.removeParameterListener(band3MixID, this);
+    _treeState.removeParameterListener(band4MixID, this);
+    _treeState.removeParameterListener(band1CutoffID, this);
+    _treeState.removeParameterListener(band2CutoffID, this);
+    _treeState.removeParameterListener(band3CutoffID, this);
+    
+    // Crushers
+    _treeState.removeParameterListener(bitDepth1ID, this);
+    _treeState.removeParameterListener(resampleRateID, this);
+    _treeState.removeParameterListener(masterMixID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::createParameterLayout()
@@ -54,10 +82,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { presetID, 1 }, presetName, 0, 9, 0));
     
     // IO
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { inputID, 1 }, inputName,
-                                                                  juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f), 0.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { outputID, 1 }, outputName,
-                                                                  juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f), 0.0f));
+    auto ioRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f);
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { inputID, 1 }, inputName, ioRange, 0.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { outputID, 1 }, outputName, ioRange, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { phaseID, 1 }, phaseName, false));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { hqID, 1 }, hqName, false));
     
@@ -69,6 +96,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2ID, 1 }, band2Name, true));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3ID, 1 }, band3Name, true));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band4ID, 1 }, band4Name, true));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band1MixID, 1 }, band1MixName, 0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0.0f, 1.0f, 1.0f));
+    
+    auto cutoffRange = juce::NormalisableRange<float> (20.0f, 20000.0f, 0.1f, 0.2f);
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band1CutoffID, 1 }, band1CutoffName, cutoffRange, 100.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2CutoffID, 1 }, band2CutoffName, cutoffRange, 500.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3CutoffID, 1 }, band3CutoffName, cutoffRange, 2000.0f));
+    
+    // Crushers
+    auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
+    bitDepthRange.setSkewForCentre(5.0);
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 24.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 50.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0.0f, 1.0f, 1.0f));
     
     return { params.begin(), params.end() };
 }
@@ -85,7 +128,7 @@ void MarauderAudioProcessor::parameterChanged(const juce::String &parameterID, f
             spec.sampleRate = getSampleRate() * _oversamplingModule.getOversamplingFactor();
             _inputGainModule.prepare(spec);
             _outputGainModule.prepare(spec);
-            _mbProcessor.prepare(spec);
+            _marauder.prepare(spec);
         }
 
         else
@@ -93,7 +136,7 @@ void MarauderAudioProcessor::parameterChanged(const juce::String &parameterID, f
             spec.sampleRate = getSampleRate();
             _inputGainModule.prepare(spec);
             _outputGainModule.prepare(spec);
-            _mbProcessor.prepare(spec);
+            _marauder.prepare(spec);
         }
     }
             
@@ -105,11 +148,23 @@ void MarauderAudioProcessor::updateParameters()
     _inputGainModule.setGainDecibels(_treeState.getRawParameterValue(inputID)->load());
     _outputGainModule.setGainDecibels(_treeState.getRawParameterValue(outputID)->load());
     
-    // Bands
-    _mbProcessor.toggleBand1(_treeState.getRawParameterValue(band1ID)->load());
-    _mbProcessor.toggleBand2(_treeState.getRawParameterValue(band2ID)->load());
-    _mbProcessor.toggleBand3(_treeState.getRawParameterValue(band3ID)->load());
-    _mbProcessor.toggleBand4(_treeState.getRawParameterValue(band4ID)->load());
+    _marauder.toggleBand1(_treeState.getRawParameterValue(band1ID)->load());
+    _marauder.toggleBand2(_treeState.getRawParameterValue(band2ID)->load());
+    _marauder.toggleBand3(_treeState.getRawParameterValue(band3ID)->load());
+    _marauder.toggleBand4(_treeState.getRawParameterValue(band4ID)->load());
+    _marauder.setLowCutoff(_treeState.getRawParameterValue(band1CutoffID)->load());
+    _marauder.setMidCutoff(_treeState.getRawParameterValue(band2CutoffID)->load());
+    _marauder.setHighCutoff(_treeState.getRawParameterValue(band3CutoffID)->load());
+    _marauder.setLowMix(_treeState.getRawParameterValue(band1MixID)->load());
+    _marauder.setLowMidMix(_treeState.getRawParameterValue(band2MixID)->load());
+    _marauder.setMidMix(_treeState.getRawParameterValue(band3MixID)->load());
+    _marauder.setHighMix(_treeState.getRawParameterValue(band4MixID)->load());
+    
+    _marauder.setBitDepth(_treeState.getRawParameterValue(bitDepth1ID)->load());
+    auto rate = juce::jmap(_treeState.getRawParameterValue(resampleRateID)->load(), 1.0f, 50.0f, 50.0f, 1.0f);
+    _marauder.setResampledRate(rate);
+    
+    _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load());
 }
 
 //==============================================================================
@@ -199,7 +254,7 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     // DSP
     _inputGainModule.prepare(spec);
     _outputGainModule.prepare(spec);
-    _mbProcessor.prepare(spec);
+    _marauder.prepare(spec);
     
     // Init params
     updateParameters();
@@ -241,16 +296,17 @@ void MarauderAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 {
     juce::ScopedNoDenormals noDenormals;
 
-    if (hqToggle)
-    {
-        hqProcessBlock(buffer);
-    }
+//    if (hqToggle)
+//    {
+//        hqProcessBlock(buffer);
+//    }
+//
+//    else
+//    {
+//        normalProcessBlock(buffer);
+//    }
     
-    else
-    {
-        normalProcessBlock(buffer);
-    }
-
+    _marauder.processBuffer(buffer);
 }
 
 void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)
@@ -264,8 +320,6 @@ void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)
     
     // Input
     _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
-    
-    _mbProcessor.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
     
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
@@ -289,8 +343,6 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
 
     // Input
     _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
-    
-    _mbProcessor.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));

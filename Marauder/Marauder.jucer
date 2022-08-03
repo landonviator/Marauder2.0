@@ -6,10 +6,8 @@
   <MAINGROUP id="x9l17S" name="Marauder">
     <GROUP id="{A885A062-DD29-C2F0-FBE2-DCCED685F7AE}" name="Source">
       <GROUP id="{043B5D02-7B94-F3A0-D76D-3D365A3818E0}" name="DSP">
-        <FILE id="gPfkuU" name="MultiBandProcessor.cpp" compile="1" resource="0"
-              file="Source/DSP/MultiBandProcessor.cpp"/>
-        <FILE id="koAxsf" name="MultiBandProcessor.h" compile="0" resource="0"
-              file="Source/DSP/MultiBandProcessor.h"/>
+        <FILE id="E6jlw0" name="Marauder.cpp" compile="1" resource="0" file="Source/DSP/Marauder.cpp"/>
+        <FILE id="LlLKCK" name="Marauder.h" compile="0" resource="0" file="Source/DSP/Marauder.h"/>
       </GROUP>
       <GROUP id="{2FE83AD2-635B-EB8D-FE59-EB2F84C75A5D}" name="GUI">
         <GROUP id="{C995866F-2F9E-411D-8DFC-5C7D1E8CFB44}" name="Components">
@@ -90,7 +88,7 @@
         <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
-        <MODULEPATH id="viator_modules" path="../../viatordsp/viator_modules"/>
+        <MODULEPATH id="viator_modules" path="../../../../../Users/land00m/Documents/viatordsp"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
@@ -109,6 +107,6 @@
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
-    <MODULE id="viator_modules" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
+    <MODULE id="viator_modules" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>
 </JUCERPROJECT>
