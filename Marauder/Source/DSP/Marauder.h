@@ -27,42 +27,78 @@ public:
             for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
             {
                 // Divide into bands
-                _mbProcessor.processSample(data[ch][sample], ch);
-                
-                // Dry signal
-                float _drySignal = data[ch][sample];
+                //_mbProcessor.processSample(data[ch][sample], ch);
                 
                 // Wet signals
-                float lowBand = _mbProcessor.getLowBand() * _lowMix.getNextValue();
-                float lowMidBand = _mbProcessor.getLowMidBand() * _lowMidMix.getNextValue();
-                float midBand = _mbProcessor.getMidBand() * _midMix.getNextValue();
-                float highBand = _mbProcessor.getHighBand() * _highMix.getNextValue();
-                _wetSignal = (lowBand + lowMidBand + midBand + highBand) * 0.5 + 0.5;
+                float lowBand = _mbProcessor.getLowBand();
+                float lowMidBand = _mbProcessor.getLowMidBand();
+                float midBand = _mbProcessor.getMidBand();
+                float highBand = _mbProcessor.getHighBand();
                 
-                _wetSignal = totalQLevels * _wetSignal;
+                float _wetLowSignal = lowBand * 0.5 + 0.5;
+                float _wetLowMidSignal = lowMidBand * 0.5 + 0.5;
+                float _wetMidSignal = midBand * 0.5 + 0.5;
+                float _wetHighSignal = highBand * 0.5 + 0.5;
+                
+                _wetLowSignal = totalQLevels * _wetLowSignal;
+                _wetLowMidSignal = totalQLevels * _wetLowMidSignal;
+                _wetMidSignal = totalQLevels * _wetMidSignal;
+                _wetHighSignal = totalQLevels * _wetHighSignal;
 
-                _wetSignal = (std::round(_wetSignal) / totalQLevels) * 2 - 1;
+                _wetLowSignal = (std::round(_wetLowSignal) / totalQLevels) * 2 - 1;
+                _wetLowMidSignal = (std::round(_wetLowMidSignal) / totalQLevels) * 2 - 1;
+                _wetMidSignal = (std::round(_wetMidSignal) / totalQLevels) * 2 - 1;
+                _wetHighSignal = (std::round(_wetHighSignal) / totalQLevels) * 2 - 1;
 
-                remainder = std::fmodf(_wetSignal, 1.0 / totalQLevels);
+                float lowRemainder = std::fmodf(_wetLowSignal, 1.0 / totalQLevels);
+                float lowMidRemainder = std::fmodf(_wetLowMidSignal, 1.0 / totalQLevels);
+                float midRemainder = std::fmodf(_wetMidSignal, 1.0 / totalQLevels);
+                float highRemainder = std::fmodf(_wetHighSignal, 1.0 / totalQLevels);
 
-                _wetSignal -= remainder;
+                _wetLowSignal -= lowRemainder;
+                _wetLowMidSignal -= lowMidRemainder;
+                _wetMidSignal -= midRemainder;
+                _wetHighSignal -= highRemainder;
                 
                 // Resampler
                 if (rateDivide > 1)
                 {
                     if (sample % rateDivide != 0)
                     {
-                        _wetSignal = data[ch][sample - sample % rateDivide];
+                        _wetLowSignal = data[ch][sample - sample % rateDivide];
+                        _wetLowMidSignal = data[ch][sample - sample % rateDivide];
+                        _wetMidSignal = data[ch][sample - sample % rateDivide];
+                        _wetHighSignal = data[ch][sample - sample % rateDivide];
                     }
                 }
                 
                 // Lofi distortion
-                if (_wetSignal < 0)
+                if (_wetLowSignal < 0)
                 {
-                    _wetSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
+                    _wetLowSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
                 }
                 
-                data[ch][sample] = (1.0 - _mix.getNextValue()) * _drySignal + _wetSignal * _mix.getNextValue();
+                if (_wetLowMidSignal < 0)
+                {
+                    _wetLowMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                }
+                
+                if (_wetMidSignal < 0)
+                {
+                    _wetMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                }
+                
+                if (_wetHighSignal < 0)
+                {
+                    _wetHighSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                }
+                
+                float lowOutput = (1.0 - _lowMix.getNextValue()) * lowBand + _wetLowSignal * _lowMix.getNextValue();
+                float lowMidOutput = (1.0 - _lowMidMix.getNextValue()) * lowMidBand + _wetLowMidSignal * _lowMidMix.getNextValue();
+                float midOutput = (1.0 - _midMix.getNextValue()) * midBand + _wetMidSignal * _midMix.getNextValue();
+                float highOutput = (1.0 - _highMix.getNextValue()) * highBand + _wetHighSignal * _highMix.getNextValue();
+                
+                data[ch][sample] = lowOutput + lowMidOutput + midOutput + highOutput;
             }
         }
     }

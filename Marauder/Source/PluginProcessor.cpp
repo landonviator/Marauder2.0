@@ -37,9 +37,6 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     _treeState.addParameterListener(band2MixID, this);
     _treeState.addParameterListener(band3MixID, this);
     _treeState.addParameterListener(band4MixID, this);
-    _treeState.addParameterListener(band1CutoffID, this);
-    _treeState.addParameterListener(band2CutoffID, this);
-    _treeState.addParameterListener(band3CutoffID, this);
     
     // Crusher
     _treeState.addParameterListener(bitDepth1ID, this);
@@ -65,9 +62,6 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(band2MixID, this);
     _treeState.removeParameterListener(band3MixID, this);
     _treeState.removeParameterListener(band4MixID, this);
-    _treeState.removeParameterListener(band1CutoffID, this);
-    _treeState.removeParameterListener(band2CutoffID, this);
-    _treeState.removeParameterListener(band3CutoffID, this);
     
     // Crusher
     _treeState.removeParameterListener(bitDepth1ID, this);
@@ -102,11 +96,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0.0f, 1.0f, 1.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0.0f, 1.0f, 1.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0.0f, 1.0f, 1.0f));
-    
-    auto cutoffRange = juce::NormalisableRange<float> (20.0f, 20000.0f, 0.1f, 0.2f);
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band1CutoffID, 1 }, band1CutoffName, cutoffRange, 100.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2CutoffID, 1 }, band2CutoffName, cutoffRange, 500.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3CutoffID, 1 }, band3CutoffName, cutoffRange, 2000.0f));
     
     // Crusher
     auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
@@ -155,9 +144,9 @@ void MarauderAudioProcessor::updateParameters()
     _marauder.toggleBand2(_treeState.getRawParameterValue(band2ID)->load());
     _marauder.toggleBand3(_treeState.getRawParameterValue(band3ID)->load());
     _marauder.toggleBand4(_treeState.getRawParameterValue(band4ID)->load());
-    _marauder.setLowCutoff(_treeState.getRawParameterValue(band1CutoffID)->load());
-    _marauder.setMidCutoff(_treeState.getRawParameterValue(band2CutoffID)->load());
-    _marauder.setHighCutoff(_treeState.getRawParameterValue(band3CutoffID)->load());
+    _marauder.setLowCutoff(250.0);
+    _marauder.setMidCutoff(1000.0);
+    _marauder.setHighCutoff(7000.0);
     _marauder.setLowMix(_treeState.getRawParameterValue(band1MixID)->load());
     _marauder.setLowMidMix(_treeState.getRawParameterValue(band2MixID)->load());
     _marauder.setMidMix(_treeState.getRawParameterValue(band3MixID)->load());
@@ -167,8 +156,8 @@ void MarauderAudioProcessor::updateParameters()
     auto rate = juce::jmap(_treeState.getRawParameterValue(resampleRateID)->load(), 1.0f, 50.0f, 50.0f, 1.0f);
     _marauder.setResampledRate(rate);
     
-    _aliasFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.5);
-    _artifactFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.5);
+    _aliasFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
+    _artifactFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
     _marauder.setDrive(_treeState.getRawParameterValue(driveID)->load());
     _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load());
 }
@@ -304,19 +293,7 @@ void MarauderAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 {
     juce::ScopedNoDenormals noDenormals;
 
-//    if (hqToggle)
-//    {
-//        hqProcessBlock(buffer);
-//    }
-//
-//    else
-//    {
-//        normalProcessBlock(buffer);
-//    }
-    
-    _aliasFilter.processBuffer(buffer);
-    _marauder.processBuffer(buffer);
-    _artifactFilter.processBuffer(buffer);
+    normalProcessBlock(buffer);
 }
 
 void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)
@@ -353,6 +330,10 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
 
     // Input
     _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
+    
+    _aliasFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    _marauder.processBuffer(buffer);
+    _artifactFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
