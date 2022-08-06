@@ -43,6 +43,10 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     _treeState.addParameterListener(resampleRateID, this);
     _treeState.addParameterListener(driveID, this);
     _treeState.addParameterListener(masterMixID, this);
+    
+    // Filter
+    _treeState.addParameterListener(lpID, this);
+    _treeState.addParameterListener(hpID, this);
 }
 
 MarauderAudioProcessor::~MarauderAudioProcessor()
@@ -68,6 +72,10 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(resampleRateID, this);
     _treeState.removeParameterListener(driveID, this);
     _treeState.removeParameterListener(masterMixID, this);
+    
+    // Filter
+    _treeState.removeParameterListener(lpID, this);
+    _treeState.removeParameterListener(hpID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::createParameterLayout()
@@ -104,6 +112,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 50.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0.0f, 1.0f, 1.0f));
+    
+    // Filters
+    auto passFilterRange = juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f);
+    passFilterRange.setSkewForCentre(1000.0);
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { lpID, 1 }, lpName, passFilterRange, 20000.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { hpID, 1 }, hpName, passFilterRange, 20.0f));
     
     return { params.begin(), params.end() };
 }
@@ -160,6 +174,9 @@ void MarauderAudioProcessor::updateParameters()
     _artifactFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
     _marauder.setDrive(_treeState.getRawParameterValue(driveID)->load());
     _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load());
+    
+    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(lpID)->load());
+    _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(hpID)->load());
 }
 
 //==============================================================================
@@ -253,6 +270,16 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     _aliasFilter.prepare(spec);
     _artifactFilter.prepare(spec);
     
+    _lpFilter.prepare(spec);
+    _lpFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
+    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kLowPass);
+    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
+    
+    _hpFilter.prepare(spec);
+    _hpFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
+    _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kHighPass);
+    _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
+    
     // Init params
     updateParameters();
 }
@@ -292,7 +319,6 @@ bool MarauderAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 void MarauderAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-
     normalProcessBlock(buffer);
 }
 
@@ -334,6 +360,9 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     _aliasFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     _marauder.processBuffer(buffer);
     _artifactFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    
+    _lpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    _hpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));

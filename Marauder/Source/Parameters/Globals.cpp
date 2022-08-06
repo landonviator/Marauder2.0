@@ -75,3 +75,9 @@ extern const juce::String driveName = "Drive";
 
 extern const juce::String masterMixID = "masterMix";
 extern const juce::String masterMixName = "Master Mix";
+
+extern const juce::String lpID = "lp";
+extern const juce::String lpName = "Lowpass";
+
+extern const juce::String hpID = "hp";
+extern const juce::String hpName = "Highpass";

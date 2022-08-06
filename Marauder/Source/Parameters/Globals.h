@@ -74,3 +74,9 @@ extern const juce::String driveName;
 
 extern const juce::String masterMixID;
 extern const juce::String masterMixName;
+
+extern const juce::String lpID;
+extern const juce::String lpName;
+
+extern const juce::String hpID;
+extern const juce::String hpName;

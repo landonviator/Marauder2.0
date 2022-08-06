@@ -27,7 +27,7 @@ public:
             for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
             {
                 // Divide into bands
-                //_mbProcessor.processSample(data[ch][sample], ch);
+                _mbProcessor.processSample(data[ch][sample], ch);
                 
                 // Wet signals
                 float lowBand = _mbProcessor.getLowBand();
@@ -65,32 +65,32 @@ public:
                 {
                     if (sample % rateDivide != 0)
                     {
-                        _wetLowSignal = data[ch][sample - sample % rateDivide];
-                        _wetLowMidSignal = data[ch][sample - sample % rateDivide];
-                        _wetMidSignal = data[ch][sample - sample % rateDivide];
-                        _wetHighSignal = data[ch][sample - sample % rateDivide];
+                        _wetLowSignal = data[ch][sample - sample % rateDivide] * 0.25;
+                        _wetLowMidSignal = data[ch][sample - sample % rateDivide] * 0.25;
+                        _wetMidSignal = data[ch][sample - sample % rateDivide] * 0.25;
+                        _wetHighSignal = data[ch][sample - sample % rateDivide] * 0.25;
                     }
                 }
                 
                 // Lofi distortion
                 if (_wetLowSignal < 0)
                 {
-                    _wetLowSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                    _wetLowSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
                 }
                 
                 if (_wetLowMidSignal < 0)
                 {
-                    _wetLowMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                    _wetLowMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
                 }
                 
                 if (_wetMidSignal < 0)
                 {
-                    _wetMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                    _wetMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
                 }
                 
                 if (_wetHighSignal < 0)
                 {
-                    _wetHighSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, 0.0f);
+                    _wetHighSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
                 }
                 
                 float lowOutput = (1.0 - _lowMix.getNextValue()) * lowBand + _wetLowSignal * _lowMix.getNextValue();
@@ -98,7 +98,8 @@ public:
                 float midOutput = (1.0 - _midMix.getNextValue()) * midBand + _wetMidSignal * _midMix.getNextValue();
                 float highOutput = (1.0 - _highMix.getNextValue()) * highBand + _wetHighSignal * _highMix.getNextValue();
                 
-                data[ch][sample] = lowOutput + lowMidOutput + midOutput + highOutput;
+                data[ch][sample] = (1.0 - _mix.getNextValue()) * data[ch][sample] +
+                (lowOutput + lowMidOutput + midOutput + highOutput) * _mix.getNextValue();
             }
         }
     }
