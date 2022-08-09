@@ -6,6 +6,10 @@
 #include "./GUI/Components/SettingsPage.h"
 #include "./GUI/Components/Header.h"
 #include "./GUI/Components/IOModule.h"
+#include "./GUI/Components/MultibandModule.h"
+#include "./GUI/Components/BitCrusherModule.h"
+#include "./GUI/Components/DelayModule.h"
+#include "./GUI/Components/FilterModule.h"
 
 //==============================================================================
 
@@ -36,6 +40,10 @@ private:
     Header _headerComp;
     SettingsPage _settingsPage;
     IOModule _ioComp;
+    MultibandModule _multibandComp;
+    BitCrusherModule _bitCrusherComp;
+    DelayModule _delayComp;
+    FilterModule _filterComp;
     
     enum class Theme
     {

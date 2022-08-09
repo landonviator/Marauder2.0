@@ -87,6 +87,15 @@ private:
     bool hqToggle;
     void updateParameters();
     
+    static constexpr auto effectDelaySamples = 192000;
+    juce::dsp::DelayLine<float> delay { effectDelaySamples };
+    juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> linear { effectDelaySamples };
+    
+    std::array<float, 2> delayValue { {} };
+    std::array<float, 2> lastDelayOutput;
+    std::array<juce::LinearSmoothedValue<float>, 2> delayFeedbackVolume;
+    viator_dsp::SVFilter<float> _feedbackFilter;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MarauderAudioProcessor)
 };

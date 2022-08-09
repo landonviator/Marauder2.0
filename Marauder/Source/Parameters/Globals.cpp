@@ -81,3 +81,9 @@ extern const juce::String lpName = "Lowpass";
 
 extern const juce::String hpID = "hp";
 extern const juce::String hpName = "Highpass";
+
+extern const juce::String delayTimeID = "delayTime";
+extern const juce::String delayTimeName = "Tension";
+
+extern const juce::String feedbackID = "feedback";
+extern const juce::String feedbackName = "Intensity";

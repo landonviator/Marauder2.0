@@ -47,6 +47,10 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     // Filter
     _treeState.addParameterListener(lpID, this);
     _treeState.addParameterListener(hpID, this);
+    
+    // Delay
+    _treeState.addParameterListener(delayTimeID, this);
+    _treeState.addParameterListener(feedbackID, this);
 }
 
 MarauderAudioProcessor::~MarauderAudioProcessor()
@@ -76,6 +80,10 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     // Filter
     _treeState.removeParameterListener(lpID, this);
     _treeState.removeParameterListener(hpID, this);
+    
+    // Delay
+    _treeState.removeParameterListener(delayTimeID, this);
+    _treeState.removeParameterListener(feedbackID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::createParameterLayout()
@@ -118,6 +126,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     passFilterRange.setSkewForCentre(1000.0);
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { lpID, 1 }, lpName, passFilterRange, 20000.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { hpID, 1 }, hpName, passFilterRange, 20.0f));
+    
+    // Delay
+    auto delayRange = juce::NormalisableRange<float> (0.0f, 1700.0f, 1.0f);
+    delayRange.setSkewForCentre(440.0);
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { delayTimeID, 1 }, delayTimeName, delayRange, 440.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { feedbackID, 1 }, feedbackName, 0.0f, 0.95f, 0.95f));
     
     return { params.begin(), params.end() };
 }
@@ -280,6 +294,21 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kHighPass);
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
     
+    _feedbackFilter.prepare(spec);
+    _feedbackFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
+    _feedbackFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kLowPass);
+    _feedbackFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
+    _feedbackFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, 1000.0);
+    
+    delay.prepare (spec);
+    linear.prepare (spec);
+    
+    for (auto& volume : delayFeedbackVolume)
+        volume.reset (spec.sampleRate, 0.05);
+    
+    linear.reset();
+    std::fill (lastDelayOutput.begin(), lastDelayOutput.end(), 0.0f);
+    
     // Init params
     updateParameters();
 }
@@ -364,6 +393,23 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     _lpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     _hpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
+    for (int ch = 0; ch < block.getNumChannels(); ++ch)
+    {
+        float* data = block.getChannelPointer(ch);
+                
+        for (int sample = 0; sample < block.getNumSamples(); ++sample)
+        {
+            auto input = data[sample] - lastDelayOutput[ch];
+            auto delayAmount = _treeState.getRawParameterValue(delayTimeID)->load();
+
+            linear.pushSample (int (ch), input);
+            linear.setDelay ((float) delayAmount);
+            data[sample] += linear.popSample ((int) ch);
+                                    
+            lastDelayOutput[ch] = _feedbackFilter.processSample(data[sample], ch) * _treeState.getRawParameterValue(feedbackID)->load();
+        }
+    }
+    
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
     
@@ -385,8 +431,8 @@ bool MarauderAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* MarauderAudioProcessor::createEditor()
 {
-    //return new MarauderAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor (*this);
+    return new MarauderAudioProcessorEditor (*this);
+    //return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================

@@ -15,5 +15,17 @@ void MarauderAudioProcessorEditor::uiConstructor()
     
     // IO Module
     addAndMakeVisible(_ioComp);
+    
+    // MB Module
+    addAndMakeVisible(_multibandComp);
+    
+    // Bit Crusher Module
+    addAndMakeVisible(_bitCrusherComp);
+    
+    // Delay Module
+    addAndMakeVisible(_delayComp);
+    
+    // Filter Module
+    addAndMakeVisible(_filterComp);
 }
 

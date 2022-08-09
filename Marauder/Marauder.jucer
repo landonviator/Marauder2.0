@@ -11,10 +11,23 @@
       </GROUP>
       <GROUP id="{2FE83AD2-635B-EB8D-FE59-EB2F84C75A5D}" name="GUI">
         <GROUP id="{C995866F-2F9E-411D-8DFC-5C7D1E8CFB44}" name="Components">
+          <FILE id="WfZ43s" name="BitCrusherModule.cpp" compile="1" resource="0"
+                file="Source/GUI/Components/BitCrusherModule.cpp"/>
+          <FILE id="F2tuPD" name="BitCrusherModule.h" compile="0" resource="0"
+                file="Source/GUI/Components/BitCrusherModule.h"/>
+          <FILE id="s3KYMm" name="DelayModule.cpp" compile="1" resource="0" file="Source/GUI/Components/DelayModule.cpp"/>
+          <FILE id="im1BXT" name="DelayModule.h" compile="0" resource="0" file="Source/GUI/Components/DelayModule.h"/>
+          <FILE id="fqquSv" name="FilterModule.cpp" compile="1" resource="0"
+                file="Source/GUI/Components/FilterModule.cpp"/>
+          <FILE id="a8gOGG" name="FilterModule.h" compile="0" resource="0" file="Source/GUI/Components/FilterModule.h"/>
           <FILE id="yXbvf6" name="Header.cpp" compile="1" resource="0" file="Source/GUI/Components/Header.cpp"/>
           <FILE id="jZso9F" name="Header.h" compile="0" resource="0" file="Source/GUI/Components/Header.h"/>
           <FILE id="El57Lx" name="IOModule.cpp" compile="1" resource="0" file="Source/GUI/Components/IOModule.cpp"/>
           <FILE id="oBYzGh" name="IOModule.h" compile="0" resource="0" file="Source/GUI/Components/IOModule.h"/>
+          <FILE id="aWTAaH" name="MultibandModule.cpp" compile="1" resource="0"
+                file="Source/GUI/Components/MultibandModule.cpp"/>
+          <FILE id="jXnDCX" name="MultibandModule.h" compile="0" resource="0"
+                file="Source/GUI/Components/MultibandModule.h"/>
           <FILE id="Tfd1JU" name="SettingsPage.cpp" compile="1" resource="0"
                 file="Source/GUI/Components/SettingsPage.cpp"/>
           <FILE id="XihE98" name="SettingsPage.h" compile="0" resource="0" file="Source/GUI/Components/SettingsPage.h"/>

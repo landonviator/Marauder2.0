@@ -80,3 +80,9 @@ extern const juce::String lpName;
 
 extern const juce::String hpID;
 extern const juce::String hpName;
+
+extern const juce::String delayTimeID;
+extern const juce::String delayTimeName;
+
+extern const juce::String feedbackID;
+extern const juce::String feedbackName;

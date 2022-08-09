@@ -97,13 +97,12 @@ void IOModule::resized()
         activateFlatComps(false);
         const auto ySkeuDialSpace = 1.3;
         const auto skeuDialSize = getWidth() * 0.55;
-        const auto toggleX = getWidth() * 0.15;
+        const auto toggleX = getWidth() * 0.31;
         const auto toggleSize = getWidth() * 0.35;
         
         _inputDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
         _outputDial.setBounds(dialX, _inputDial.getY() + _inputDial.getHeight() * ySkeuDialSpace, skeuDialSize, skeuDialSize);
-        _skeuPhaseToggle.setBounds(toggleX, _outputDial.getY() + _outputDial.getHeight() * 1.1, toggleSize, toggleSize);
-        _skeuHQToggle.setBounds(_skeuPhaseToggle.getX() + _skeuPhaseToggle.getWidth(), _skeuPhaseToggle.getY(), toggleSize, toggleSize);
+        _skeuPhaseToggle.setBounds(toggleX, _outputDial.getY() + _outputDial.getHeight(), toggleSize, toggleSize);
         activateSkeuComps(true);
     }
     
