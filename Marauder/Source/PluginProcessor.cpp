@@ -37,6 +37,10 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     _treeState.addParameterListener(band2MixID, this);
     _treeState.addParameterListener(band3MixID, this);
     _treeState.addParameterListener(band4MixID, this);
+    _treeState.addParameterListener(band1SoloID, this);
+    _treeState.addParameterListener(band2SoloID, this);
+    _treeState.addParameterListener(band3SoloID, this);
+    _treeState.addParameterListener(band4SoloID, this);
     
     // Crusher
     _treeState.addParameterListener(bitDepth1ID, this);
@@ -70,6 +74,10 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(band2MixID, this);
     _treeState.removeParameterListener(band3MixID, this);
     _treeState.removeParameterListener(band4MixID, this);
+    _treeState.removeParameterListener(band1SoloID, this);
+    _treeState.removeParameterListener(band2SoloID, this);
+    _treeState.removeParameterListener(band3SoloID, this);
+    _treeState.removeParameterListener(band4SoloID, this);
     
     // Crusher
     _treeState.removeParameterListener(bitDepth1ID, this);
@@ -112,12 +120,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0.0f, 100.0f, 100.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0.0f, 100.0f, 100.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0.0f, 100.0f, 100.0f));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band1SoloID, 1 }, band1SoloName, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2SoloID, 1 }, band2SoloName, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3SoloID, 1 }, band3SoloName, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band4SoloID, 1 }, band4SoloName, false));
     
     // Crusher
     auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
     bitDepthRange.setSkewForCentre(5.0);
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 8.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 20.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 45.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 10.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0.0f, 1.0f, 1.0f));
     

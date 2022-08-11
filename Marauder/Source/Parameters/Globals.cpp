@@ -43,6 +43,18 @@ const juce::String band3Name = "Band 3";
 const juce::String band4ID = "band 4";
 const juce::String band4Name = "Band 4";
 
+extern const juce::String band1SoloID = "band 1 Solo";
+extern const juce::String band1SoloName = "band 1 Solo";
+
+extern const juce::String band2SoloID = "band 2 Solo";;
+extern const juce::String band2SoloName = "Band 2 Solo";;
+
+extern const juce::String band3SoloID = "band 3 Solo";;
+extern const juce::String band3SoloName = "Band 3 Solo";;
+
+extern const juce::String band4SoloID = "band 4 Solo";;
+extern const juce::String band4SoloName = "Band 4 Solo";;
+
 const juce::String band1MixID = "band 1 mix";
 const juce::String band1MixName  = "Band 1 Mix";
 

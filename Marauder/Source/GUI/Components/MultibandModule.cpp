@@ -54,7 +54,62 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
     _band2MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band2ID, _band2Mute);
     _band3MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band3ID, _band3Mute);
     _band4MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band4ID, _band4Mute);
-
+    _band1SoloAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band1SoloID, _band1Solo);
+    _band2SoloAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band2SoloID, _band2Solo);
+    _band3SoloAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band3SoloID, _band3Solo);
+    _band4SoloAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band4SoloID, _band4Solo);
+    
+    _band1Solo.onClick = [this]()
+    {
+        if (_band1Solo.getToggleState())
+        {
+            skeuMuteToggleLogic(_band1Mute, _band1Solo);
+        }
+        
+        else
+        {
+            resetMuteSoloLogic();
+        }
+    };
+    
+    _band2Solo.onClick = [this]()
+    {
+        if (_band2Solo.getToggleState())
+        {
+            skeuMuteToggleLogic(_band2Mute, _band2Solo);
+        }
+        
+        else
+        {
+            resetMuteSoloLogic();
+        }
+    };
+    
+    _band3Solo.onClick = [this]()
+    {
+        if (_band3Solo.getToggleState())
+        {
+            skeuMuteToggleLogic(_band3Mute, _band3Solo);
+        }
+        
+        else
+        {
+            resetMuteSoloLogic();
+        }
+    };
+    
+    _band4Solo.onClick = [this]()
+    {
+        if (_band4Solo.getToggleState())
+        {
+            skeuMuteToggleLogic(_band4Mute, _band4Solo);
+        }
+        
+        else
+        {
+            resetMuteSoloLogic();
+        }
+    };
 }
 
 MultibandModule::~MultibandModule()
@@ -175,6 +230,62 @@ void MultibandModule::activateSkeuComps(bool shouldBeOn)
             {
                 skeuLabels[label]->attachToComponent(skeuDials[label], false);
             }
+        }
+    }
+}
+
+void MultibandModule::skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, viator_gui::ToggleButton& soloButton)
+{
+    for (auto& button : skeuSolos)
+    {
+        if (button != &soloButton)
+        {
+            if (button->getToggleState())
+            {
+                button->triggerClick();
+            }
+        }
+    }
+    
+    if (muteButton.getToggleState())
+    {
+        muteButton.triggerClick();
+    }
+    
+    for (auto& button : skeuMutes)
+    {
+        if (soloButton.getToggleState())
+        {
+            if (button != &muteButton)
+            {
+                if (!button->getToggleState())
+                {
+                    button->triggerClick();
+                }
+            }
+        }
+
+        else
+        {
+            if (button != &muteButton)
+            {
+                if (button->getToggleState())
+                {
+                    button->triggerClick();
+                }
+            }
+        }
+    }
+}
+
+
+void MultibandModule::resetMuteSoloLogic()
+{
+    for (auto& toggle : skeuToggles)
+    {
+        if (toggle->getToggleState())
+        {
+            toggle->triggerClick();
         }
     }
 }

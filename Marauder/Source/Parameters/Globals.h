@@ -42,6 +42,18 @@ extern const juce::String band3Name;
 extern const juce::String band4ID;
 extern const juce::String band4Name;
 
+extern const juce::String band1SoloID;
+extern const juce::String band1SoloName;
+
+extern const juce::String band2SoloID;
+extern const juce::String band2SoloName;
+
+extern const juce::String band3SoloID;
+extern const juce::String band3SoloName;
+
+extern const juce::String band4SoloID;
+extern const juce::String band4SoloName;
+
 extern const juce::String band1MixID;
 extern const juce::String band1MixName;
 

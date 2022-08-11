@@ -81,7 +81,21 @@ private:
         &_band4Mute, &_band4Solo
     };
     
+    std::vector<viator_gui::ToggleButton*> skeuMutes =
+    {
+        &_band1Mute, &_band2Mute,
+        &_band3Mute, &_band4Mute
+    };
+    
+    std::vector<viator_gui::ToggleButton*> skeuSolos =
+    {
+        &_band1Solo, &_band2Solo,
+        &_band3Solo, &_band4Solo
+    };
+    
     void activateSkeuComps(bool shouldBeOn);
+    void skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, viator_gui::ToggleButton& soloButton);
+    void resetMuteSoloLogic();
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultibandModule)
 };
