@@ -59,57 +59,7 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
     _band3SoloAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band3SoloID, _band3Solo);
     _band4SoloAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band4SoloID, _band4Solo);
     
-    _band1Solo.onClick = [this]()
-    {
-        if (_band1Solo.getToggleState())
-        {
-            skeuMuteToggleLogic(_band1Mute, _band1Solo);
-        }
-        
-        else
-        {
-            resetMuteSoloLogic();
-        }
-    };
-    
-    _band2Solo.onClick = [this]()
-    {
-        if (_band2Solo.getToggleState())
-        {
-            skeuMuteToggleLogic(_band2Mute, _band2Solo);
-        }
-        
-        else
-        {
-            resetMuteSoloLogic();
-        }
-    };
-    
-    _band3Solo.onClick = [this]()
-    {
-        if (_band3Solo.getToggleState())
-        {
-            skeuMuteToggleLogic(_band3Mute, _band3Solo);
-        }
-        
-        else
-        {
-            resetMuteSoloLogic();
-        }
-    };
-    
-    _band4Solo.onClick = [this]()
-    {
-        if (_band4Solo.getToggleState())
-        {
-            skeuMuteToggleLogic(_band4Mute, _band4Solo);
-        }
-        
-        else
-        {
-            resetMuteSoloLogic();
-        }
-    };
+    setSkeuOnClicks();
 }
 
 MultibandModule::~MultibandModule()
@@ -234,6 +184,25 @@ void MultibandModule::activateSkeuComps(bool shouldBeOn)
     }
 }
 
+void MultibandModule::setSkeuOnClicks()
+{
+    for (size_t solo = 0; solo < skeuSolos.size(); ++solo)
+    {
+        skeuSolos[solo]->onClick = [this, solo]()
+        {
+            if (skeuSolos[solo]->getToggleState())
+            {
+                skeuMuteToggleLogic(*skeuMutes[solo], *skeuSolos[solo]);
+            }
+            
+            else
+            {
+                resetMuteSoloLogic();
+            }
+        };
+    }
+}
+
 void MultibandModule::skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, viator_gui::ToggleButton& soloButton)
 {
     for (auto& button : skeuSolos)
@@ -242,7 +211,7 @@ void MultibandModule::skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, 
         {
             if (button->getToggleState())
             {
-                button->triggerClick();
+                button->setToggleState(false, juce::dontSendNotification);
             }
         }
     }

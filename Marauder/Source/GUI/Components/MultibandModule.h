@@ -93,6 +93,7 @@ private:
         &_band3Solo, &_band4Solo
     };
     
+    void setSkeuOnClicks();
     void activateSkeuComps(bool shouldBeOn);
     void skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, viator_gui::ToggleButton& soloButton);
     void resetMuteSoloLogic();
