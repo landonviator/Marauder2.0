@@ -12,7 +12,7 @@ void MarauderAudioProcessorEditor::initWindow()
     
     if (r.getWidth() <= 1920)
     {
-        width = x * 0.7;
+        width = x * 0.8;
     }
     
     else

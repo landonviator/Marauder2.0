@@ -72,10 +72,10 @@ void IOModule::paint (juce::Graphics& g)
     updateSliderColors(_flatOutputDial);
     
     // Update Label colors
-    _inputDial.updateLabelColor(m_textAccentColor);
-    _outputDial.updateLabelColor(m_textAccentColor);
-    _inputLabel.setColour(juce::Label::ColourIds::textColourId, m_textAccentColor);
-    _outputLabel.setColour(juce::Label::ColourIds::textColourId, m_textAccentColor);
+    _inputDial.updateLabelColor(m_textAccentColor.withLightness(0.75f));
+    _outputDial.updateLabelColor(m_textAccentColor.withLightness(0.75f));
+    _inputLabel.setColour(juce::Label::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f));
+    _outputLabel.setColour(juce::Label::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f));
     _skeuPhaseToggle.updateLabelColor(m_textAccentColor);
     _skeuHQToggle.updateLabelColor(m_textAccentColor);
     
