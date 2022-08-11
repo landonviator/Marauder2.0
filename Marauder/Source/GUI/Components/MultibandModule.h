@@ -98,5 +98,24 @@ private:
     void skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, viator_gui::ToggleButton& soloButton);
     void resetMuteSoloLogic();
     
+    /** Flat Comps */
+    viator_gui::Dial _band1FlatMixDial;
+    viator_gui::Dial _band2FlatMixDial;
+    viator_gui::Dial _band3FlatMixDial;
+    viator_gui::Dial _band4FlatMixDial;
+    std::unique_ptr<sliderAttachment> _band1FlatMixDialAttach;
+    std::unique_ptr<sliderAttachment> _band2FlatMixDialAttach;
+    std::unique_ptr<sliderAttachment> _band3FlatMixDialAttach;
+    std::unique_ptr<sliderAttachment> _band4FlatMixDialAttach;
+    
+    std::vector<viator_gui::Dial*> flatDials =
+    {
+        &_band1FlatMixDial, &_band2FlatMixDial, &_band3FlatMixDial, &_band4FlatMixDial
+    };
+    
+    void activateFlatComps(bool shouldBeOn);
+    void updateSliderColors(viator_gui::Dial& slider);
+    void updateFlatColors();
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultibandModule)
 };

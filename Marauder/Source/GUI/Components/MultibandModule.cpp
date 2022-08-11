@@ -25,6 +25,10 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
 , _band3Solo(true, "S", false)
 , _band4Mute(true, "M", false)
 , _band4Solo(true, "S", false)
+, _band1FlatMixDial(" %", "Band 1", 0.0, 100.0, 1.0, 100.0)
+, _band2FlatMixDial(" %", "Band 2", 0.0, 100.0, 1.0, 100.0)
+, _band3FlatMixDial(" %", "Band 3", 0.0, 100.0, 1.0, 100.0)
+, _band4FlatMixDial(" %", "Band 4", 0.0, 100.0, 1.0, 100.0)
 {
     //addAndMakeVisible(_mainBorder);
     _mainBorder.setText("Multiband Module");
@@ -39,6 +43,17 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
     _band2MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band2MixID, _band2MixDial);
     _band3MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band3MixID, _band3MixDial);
     _band4MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band4MixID, _band4MixDial);
+    
+    for (auto& dial : flatDials)
+    {
+        addAndMakeVisible(dial);
+        dial->setDoubleClickReturnValue(true, 100.0);
+    }
+    
+    _band1FlatMixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band1MixID, _band1FlatMixDial);
+    _band2FlatMixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band2MixID, _band2FlatMixDial);
+    _band3FlatMixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band3MixID, _band3FlatMixDial);
+    _band4FlatMixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band4MixID, _band4FlatMixDial);
     
     for (auto& label : skeuLabels)
     {
@@ -86,6 +101,11 @@ void MultibandModule::paint (juce::Graphics& g)
     {
         toggle->updateLabelColor(m_textAccentColor);
     }
+    
+    for (auto& dial : flatDials)
+    {
+        updateSliderColors(*dial);
+    }
 }
 
 void MultibandModule::resized()
@@ -94,15 +114,15 @@ void MultibandModule::resized()
     
     const auto dialX = getWidth() * 0.01;
     const auto dialY = getHeight() * 0.12;
+    const auto ySkeuDialSpace = 2.0;
+    const auto skeuDialSize = getWidth() * 0.5;
+    const auto toggleX = getWidth() * 0.31;
+    const auto toggleSize = getWidth() * 0.35;
     
     // Skeuomorphic
     if (_settingsPage.getUIType())
     {
-        //activateFlatComps(false);
-        const auto ySkeuDialSpace = 2.0;
-        const auto skeuDialSize = getWidth() * 0.5;
-        const auto toggleX = getWidth() * 0.31;
-        const auto toggleSize = getWidth() * 0.35;
+        activateFlatComps(false);
         
         _band1MixDial.setBounds(dialX,
                                 dialY,
@@ -157,6 +177,36 @@ void MultibandModule::resized()
                              _band4Mute.getWidth(), _band4Mute.getHeight());
         activateSkeuComps(true);
     }
+    
+    // Flat
+    else
+    {
+        activateSkeuComps(false);
+        const auto yFlatDialSpace = 1.3;
+        const auto flatDialSize = getWidth() * 0.55;
+
+        _band1FlatMixDial.setBounds(dialX,
+                                dialY,
+                                skeuDialSize,
+                                skeuDialSize);
+        
+        _band2FlatMixDial.setBounds(_band1MixDial.getX() + _band1MixDial.getWidth(),
+                                _band1MixDial.getY(),
+                                skeuDialSize,
+                                skeuDialSize);
+        
+        _band3FlatMixDial.setBounds(dialX,
+                                _band2MixDial.getY() + _band2MixDial.getHeight() * ySkeuDialSpace,
+                                skeuDialSize,
+                                skeuDialSize);
+        
+        _band4FlatMixDial.setBounds(_band1MixDial.getX() + _band1MixDial.getWidth(),
+                                _band3MixDial.getY(),
+                                skeuDialSize,
+                                skeuDialSize);
+        
+        activateFlatComps(true);
+    }
 }
 
 void MultibandModule::activateSkeuComps(bool shouldBeOn)
@@ -179,6 +229,31 @@ void MultibandModule::activateSkeuComps(bool shouldBeOn)
             if (skeuLabels[label]->getAttachedComponent() != skeuDials[label])
             {
                 skeuLabels[label]->attachToComponent(skeuDials[label], false);
+            }
+        }
+    }
+}
+
+void MultibandModule::activateFlatComps(bool shouldBeOn)
+{
+    for (auto& dial : flatDials)
+    {
+        dial->setEnabled(shouldBeOn);
+        dial->setVisible(shouldBeOn);
+    }
+    
+    // Toggle
+    //_skeuPhaseToggle.setEnabled(shouldBeOn);
+    //_skeuPhaseToggle.setVisible(shouldBeOn);
+    
+    // Switch component attachment
+    if (shouldBeOn)
+    {
+        for (size_t label = 0; label < skeuLabels.size(); ++label)
+        {
+            if (skeuLabels[label]->getAttachedComponent() != flatDials[label])
+            {
+                skeuLabels[label]->attachToComponent(flatDials[label], false);
             }
         }
     }
@@ -257,4 +332,27 @@ void MultibandModule::resetMuteSoloLogic()
             toggle->triggerClick();
         }
     }
+}
+
+void MultibandModule::updateSliderColors(viator_gui::Dial &slider)
+{
+    slider.setColour(juce::Slider::ColourIds::rotarySliderFillColourId, m_mainCompFillColor);
+    slider.setColour(juce::Slider::ColourIds::rotarySliderOutlineColourId, m_bgLighterColor);
+    slider.setColour(juce::Slider::ColourIds::trackColourId, m_textAccentColor);
+    slider.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colours::black.withAlpha(0.0f));
+    slider.setColour(juce::Slider::ColourIds::textBoxTextColourId, m_textAccentColor);
+    slider.setColour(juce::Slider::ColourIds::thumbColourId, m_mainCompColor);
+    slider.setColour(juce::Slider::ColourIds::backgroundColourId, m_bgTransparent);
+    
+    if (_settingsPage.getGlowState())
+    {
+        slider.updateShadowColor(m_mainCompColor, _settingsPage.getCurrentGlowValue());
+    }
+    
+    else
+    {
+        slider.updateShadowColor(juce::Colours::black, 0.4f);
+    }
+    
+    slider.forceShadow();
 }
