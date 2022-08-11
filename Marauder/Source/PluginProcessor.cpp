@@ -104,21 +104,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { colorID, 1 }, colorName, 0, 9, 0));
     
     // Bands
-    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band1ID, 1 }, band1Name, true));
-    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2ID, 1 }, band2Name, true));
-    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3ID, 1 }, band3Name, true));
-    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band4ID, 1 }, band4Name, true));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band1MixID, 1 }, band1MixName, 0.0f, 1.0f, 1.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0.0f, 1.0f, 1.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0.0f, 1.0f, 1.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band1ID, 1 }, band1Name, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2ID, 1 }, band2Name, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3ID, 1 }, band3Name, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band4ID, 1 }, band4Name, false));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band1MixID, 1 }, band1MixName, 0.0f, 100.0f, 100.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0.0f, 100.0f, 100.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0.0f, 100.0f, 100.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0.0f, 100.0f, 100.0f));
     
     // Crusher
     auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
     bitDepthRange.setSkewForCentre(5.0);
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 24.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 50.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 0.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 8.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 20.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 10.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0.0f, 1.0f, 1.0f));
     
     // Filters
@@ -130,8 +130,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     // Delay
     auto delayRange = juce::NormalisableRange<float> (0.0f, 1700.0f, 1.0f);
     delayRange.setSkewForCentre(440.0);
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { delayTimeID, 1 }, delayTimeName, delayRange, 440.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { feedbackID, 1 }, feedbackName, 0.0f, 0.95f, 0.95f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { delayTimeID, 1 }, delayTimeName, delayRange, 0.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { feedbackID, 1 }, feedbackName, 0.0f, 0.95f, 0.0f));
     
     return { params.begin(), params.end() };
 }
@@ -168,17 +168,17 @@ void MarauderAudioProcessor::updateParameters()
     _inputGainModule.setGainDecibels(_treeState.getRawParameterValue(inputID)->load());
     _outputGainModule.setGainDecibels(_treeState.getRawParameterValue(outputID)->load());
     
-    _marauder.toggleBand1(_treeState.getRawParameterValue(band1ID)->load());
-    _marauder.toggleBand2(_treeState.getRawParameterValue(band2ID)->load());
-    _marauder.toggleBand3(_treeState.getRawParameterValue(band3ID)->load());
-    _marauder.toggleBand4(_treeState.getRawParameterValue(band4ID)->load());
+    _marauder.toggleBand1(!_treeState.getRawParameterValue(band1ID)->load());
+    _marauder.toggleBand2(!_treeState.getRawParameterValue(band2ID)->load());
+    _marauder.toggleBand3(!_treeState.getRawParameterValue(band3ID)->load());
+    _marauder.toggleBand4(!_treeState.getRawParameterValue(band4ID)->load());
     _marauder.setLowCutoff(250.0);
     _marauder.setMidCutoff(1000.0);
     _marauder.setHighCutoff(7000.0);
-    _marauder.setLowMix(_treeState.getRawParameterValue(band1MixID)->load());
-    _marauder.setLowMidMix(_treeState.getRawParameterValue(band2MixID)->load());
-    _marauder.setMidMix(_treeState.getRawParameterValue(band3MixID)->load());
-    _marauder.setHighMix(_treeState.getRawParameterValue(band4MixID)->load());
+    _marauder.setLowMix(_treeState.getRawParameterValue(band1MixID)->load() * 0.01);
+    _marauder.setLowMidMix(_treeState.getRawParameterValue(band2MixID)->load() * 0.01);
+    _marauder.setMidMix(_treeState.getRawParameterValue(band3MixID)->load() * 0.01);
+    _marauder.setHighMix(_treeState.getRawParameterValue(band4MixID)->load() * 0.01);
     
     _marauder.setBitDepth(_treeState.getRawParameterValue(bitDepth1ID)->load());
     auto rate = juce::jmap(_treeState.getRawParameterValue(resampleRateID)->load(), 1.0f, 50.0f, 50.0f, 1.0f);
@@ -410,9 +410,6 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
         }
     }
     
-    // Output
-    _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
-    
     // Apply phase invert
     if (_treeState.getRawParameterValue(phaseID)->load())
     {
@@ -421,6 +418,9 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     
     // Clip output
     viator_utils::utils::hardClipBlock(block);
+    
+    // Output
+    _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
 }
 
 //==============================================================================

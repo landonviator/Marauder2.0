@@ -64,6 +64,11 @@ void SettingsPage::paint (juce::Graphics& g)
     {
         setTextButtonProps(*button);
     }
+    
+    for (auto& group : groups)
+    {
+        setGroupProps(*group);
+    }
 }
 
 void SettingsPage::resized()
@@ -240,8 +245,8 @@ void SettingsPage::setGradientToggleProps()
 void SettingsPage::setGroupProps(juce::GroupComponent &group)
 {
     addAndMakeVisible(group);
-    group.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::whitesmoke.withAlpha(0.2f));
-    group.setColour(juce::GroupComponent::ColourIds::textColourId, juce::Colours::whitesmoke.withAlpha(0.2f));
+    group.setColour(juce::GroupComponent::ColourIds::outlineColourId, m_textAccentColor.withLightness(0.75f));
+    group.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f));
 }
 
 void SettingsPage::setMenuProps(juce::ComboBox &menu)

@@ -35,6 +35,11 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
         dial->setDoubleClickReturnValue(true, 100.0);
     }
     
+    _band1MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band1MixID, _band1MixDial);
+    _band2MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band2MixID, _band2MixDial);
+    _band3MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band3MixID, _band3MixDial);
+    _band4MixDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, band4MixID, _band4MixDial);
+    
     for (auto& label : skeuLabels)
     {
         addAndMakeVisible(label);
@@ -44,6 +49,12 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
     {
         addAndMakeVisible(toggle);
     }
+    
+    _band1MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band1ID, _band1Mute);
+    _band2MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band2ID, _band2Mute);
+    _band3MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band3ID, _band3Mute);
+    _band4MuteAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, band4ID, _band4Mute);
+
 }
 
 MultibandModule::~MultibandModule()

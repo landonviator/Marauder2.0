@@ -33,6 +33,7 @@ private:
     
     using sliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     using buttonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    
     /** Skeuomorphic */
     viator_gui::FilmStripKnob _inputDial;
     viator_gui::FilmStripKnob _outputDial;
