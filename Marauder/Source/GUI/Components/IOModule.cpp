@@ -50,6 +50,7 @@ IOModule::IOModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProcessor(
     
     // Flat Phase Toggle
     addAndMakeVisible(_flatPhaseToggle);
+    _flatPhaseToggle.setButtonText("Phase");
     _flatPhaseToggleAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor._treeState, phaseID, _flatPhaseToggle);
     
     // Skeu HQ Toggle
@@ -114,7 +115,7 @@ void IOModule::resized()
         const auto flatDialSize = getWidth() * 0.55;
         _flatInputDial.setBounds(dialX, dialY, flatDialSize, flatDialSize);
         _flatOutputDial.setBounds(dialX, _inputDial.getY() + _inputDial.getHeight() * yFlatDialSpace, flatDialSize, flatDialSize);
-        _flatPhaseToggle.setBounds(dialX, _flatOutputDial.getY() + _flatOutputDial.getHeight() * 1.1, flatDialSize, flatDialSize * 0.3);
+        _flatPhaseToggle.setBounds(_flatOutputDial.getX() + _flatOutputDial.getWidth() * 0.25, _flatOutputDial.getY() + _flatOutputDial.getHeight() * 1.1, flatDialSize * 0.5, flatDialSize * 0.18);
         activateFlatComps(true);
     }
 }

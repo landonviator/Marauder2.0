@@ -93,7 +93,7 @@ private:
         &_band3Solo, &_band4Solo
     };
     
-    void setSkeuOnClicks();
+    void setOnClicks();
     void activateSkeuComps(bool shouldBeOn);
     void skeuMuteToggleLogic(viator_gui::ToggleButton& muteButton, viator_gui::ToggleButton& soloButton);
     void resetMuteSoloLogic();
@@ -116,6 +116,49 @@ private:
     void activateFlatComps(bool shouldBeOn);
     void updateSliderColors(viator_gui::Dial& slider);
     void updateFlatColors();
+    
+    viator_gui::PushButton _band1FlatMute;
+    viator_gui::PushButton _band2FlatMute;
+    viator_gui::PushButton _band3FlatMute;
+    viator_gui::PushButton _band4FlatMute;
+    viator_gui::PushButton _band1FlatSolo;
+    viator_gui::PushButton _band2FlatSolo;
+    viator_gui::PushButton _band3FlatSolo;
+    viator_gui::PushButton _band4FlatSolo;
+    std::unique_ptr<buttonAttachment> _band1FlatMuteAttach;
+    std::unique_ptr<buttonAttachment> _band2FlatMuteAttach;
+    std::unique_ptr<buttonAttachment> _band3FlatMuteAttach;
+    std::unique_ptr<buttonAttachment> _band4FlatMuteAttach;
+    std::unique_ptr<buttonAttachment> _band1FlatSoloAttach;
+    std::unique_ptr<buttonAttachment> _band2FlatSoloAttach;
+    std::unique_ptr<buttonAttachment> _band3FlatSoloAttach;
+    std::unique_ptr<buttonAttachment> _band4FlatSoloAttach;
+    
+    std::vector<viator_gui::PushButton*> flatToggles =
+    {
+        &_band1FlatMute, &_band1FlatSolo,
+        &_band2FlatMute, &_band2FlatSolo,
+        &_band3FlatMute, &_band3FlatSolo,
+        &_band4FlatMute, &_band4FlatSolo
+    };
+    
+    std::vector<viator_gui::PushButton*> flatMutes =
+    {
+        &_band1FlatMute,
+        &_band2FlatMute,
+        &_band3FlatMute,
+        &_band4FlatMute
+    };
+    
+    std::vector<viator_gui::PushButton*> flatSolos =
+    {
+        &_band1FlatSolo,
+        &_band2FlatSolo,
+        &_band3FlatSolo,
+        &_band4FlatSolo
+    };
+    
+    void flatMuteToggleLogic(viator_gui::PushButton& muteButton, viator_gui::PushButton& soloButton);
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultibandModule)
 };
