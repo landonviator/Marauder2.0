@@ -55,51 +55,43 @@ public:
                 float midRemainder = std::fmodf(_wetMidSignal, 1.0 / totalQLevels);
                 float highRemainder = std::fmodf(_wetHighSignal, 1.0 / totalQLevels);
 
-                _wetLowSignal -= lowRemainder;
-                _wetLowMidSignal -= lowMidRemainder;
-                _wetMidSignal -= midRemainder;
-                _wetHighSignal -= highRemainder;
+                _wetLowSignal = (1.0 - _lowMix.getNextValue()) * lowBand + (_wetLowSignal - lowRemainder) * _lowMix.getNextValue();
+                _wetLowMidSignal = (1.0 - _lowMidMix.getNextValue()) * lowMidBand + (_wetLowMidSignal - lowMidRemainder) * _lowMidMix.getNextValue();
+                _wetMidSignal = (1.0 - _midMix.getNextValue()) * midBand + (_wetMidSignal - midRemainder) * _midMix.getNextValue();
+                _wetHighSignal = (1.0 - _highMix.getNextValue()) * highBand + (_wetHighSignal - highRemainder) * _highMix.getNextValue();
                 
-                // Resampler
-                if (rateDivide > 1)
+                if (sample % rateDivide != 0)
                 {
-                    if (sample % rateDivide != 0)
-                    {
-                        _wetLowSignal = data[ch][sample - sample % rateDivide] * 0.25;
-                        _wetLowMidSignal = data[ch][sample - sample % rateDivide] * 0.25;
-                        _wetMidSignal = data[ch][sample - sample % rateDivide] * 0.25;
-                        _wetHighSignal = data[ch][sample - sample % rateDivide] * 0.25;
-                    }
+                    _wetLowSignal = (1.0 - _lowMix.getNextValue()) * lowBand + data[ch][sample - sample % rateDivide] * 0.25 * _lowMix.getNextValue();
+                    _wetLowMidSignal = (1.0 - _lowMidMix.getNextValue()) * lowMidBand + data[ch][sample - sample % rateDivide] * 0.25 * _lowMidMix.getNextValue();
+                    _wetMidSignal = (1.0 - _midMix.getNextValue()) * midBand + data[ch][sample - sample % rateDivide] * 0.25 * _midMix.getNextValue();
+                    _wetHighSignal = (1.0 - _highMix.getNextValue()) * highBand + data[ch][sample - sample % rateDivide] * 0.25 * _highMix.getNextValue();
                 }
                 
                 // Lofi distortion
                 if (_wetLowSignal < 0)
                 {
-                    _wetLowSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
+                    _wetLowSignal = (1.0 - _lowMix.getNextValue()) * lowBand + _wetLowSignal * juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f) * _lowMix.getNextValue();
                 }
                 
                 if (_wetLowMidSignal < 0)
                 {
-                    _wetLowMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
+                    _wetLowMidSignal = (1.0 - _lowMidMix.getNextValue()) * lowMidBand + _wetLowMidSignal * juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f) * _lowMidMix.getNextValue();
                 }
                 
                 if (_wetMidSignal < 0)
                 {
-                    _wetMidSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
+                    _wetMidSignal = (1.0 - _midMix.getNextValue()) * midBand + _wetMidSignal * juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f) * _midMix.getNextValue();
                 }
                 
                 if (_wetHighSignal < 0)
                 {
-                    _wetHighSignal *= juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f);
+                    _wetHighSignal = (1.0 - _highMix.getNextValue()) * highBand + _wetHighSignal * juce::jmap(_drive.getNextValue(), 0.0f, 20.0f, 1.0f, -1.0f) * _highMix.getNextValue();
                 }
                 
-                float lowOutput = (1.0 - _lowMix.getNextValue()) * lowBand + _wetLowSignal * _lowMix.getNextValue();
-                float lowMidOutput = (1.0 - _lowMidMix.getNextValue()) * lowMidBand + _wetLowMidSignal * _lowMidMix.getNextValue();
-                float midOutput = (1.0 - _midMix.getNextValue()) * midBand + _wetMidSignal * _midMix.getNextValue();
-                float highOutput = (1.0 - _highMix.getNextValue()) * highBand + _wetHighSignal * _highMix.getNextValue();
-                
-                data[ch][sample] = (1.0 - _mix.getNextValue()) * data[ch][sample] +
-                (lowOutput + lowMidOutput + midOutput + highOutput) * _mix.getNextValue();
+                auto wetSignal = _wetLowSignal + _wetLowMidSignal + _wetMidSignal + _wetHighSignal;
+                auto drySignal = lowBand + lowMidBand + midBand + highBand;
+                data[ch][sample] = (1.0 - _mix.getNextValue()) * drySignal + wetSignal * _mix.getNextValue();
             }
         }
     }

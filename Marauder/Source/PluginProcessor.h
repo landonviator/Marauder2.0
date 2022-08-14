@@ -80,7 +80,6 @@ private:
     viator_dsp::Marauder<float> _marauder;
     viator_dsp::BrickWallLPF _aliasFilter;
     viator_dsp::BrickWallLPF _artifactFilter;
-    viator_dsp::SVFilter<float> _lpFilter;
     viator_dsp::SVFilter<float> _hpFilter;
     void hqProcessBlock(juce::AudioBuffer<float>& buffer);
     void normalProcessBlock(juce::AudioBuffer<float>& buffer);

@@ -14,11 +14,11 @@
 //==============================================================================
 BitCrusherModule::BitCrusherModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProcessor(p), _settingsPage(s)
 , _crushDial(1, "", 1.0, 16.0, true)
-, _resampleDial(1, "", 1.0, 50.0, false)
+, _resampleDial(1, "", 5.0, 50.0, false)
 , _driveDial(1, " dB", 0.0, 20.0, false)
 , _mixDial(1, " %", 0.0, 100.0, true)
 , _crushDialFlat("", "", 1.0, 16.0, 1.0, 16.0)
-, _resampleDialFlat("", "", 1.0, 50.0, 0.01, 50.0)
+, _resampleDialFlat("", "", 5.0, 50.0, 0.01, 50.0)
 , _driveDialFlat(" dB", "", 0.0, 20.0, 0.01, 0.0)
 , _mixDialFlat(" %", "", 0.0, 100.0, 1.0, 100.0)
 {

@@ -129,7 +129,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
     bitDepthRange.setSkewForCentre(5.0);
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 16.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 0.01f), 50.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (5.0f, 50.0f, 0.01f), 50.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0, 100, 100));
     
@@ -196,12 +196,12 @@ void MarauderAudioProcessor::updateParameters()
     auto rate = juce::jmap(_treeState.getRawParameterValue(resampleRateID)->load(), 1.0f, 50.0f, 50.0f, 1.0f);
     _marauder.setResampledRate(rate);
     
-    _aliasFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
-    _artifactFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
+    _aliasFilter.setCutoff(_treeState.getRawParameterValue(lpID)->load());
+    _artifactFilter.setCutoff(_treeState.getRawParameterValue(lpID)->load());
+    
     _marauder.setDrive(_treeState.getRawParameterValue(driveID)->load());
     _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load() * 0.01);
     
-    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(lpID)->load());
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(hpID)->load());
 }
 
@@ -295,11 +295,6 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     _marauder.prepare(spec);
     _aliasFilter.prepare(spec);
     _artifactFilter.prepare(spec);
-    
-    _lpFilter.prepare(spec);
-    _lpFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
-    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kLowPass);
-    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
     
     _hpFilter.prepare(spec);
     _hpFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
@@ -402,7 +397,6 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     _marauder.processBuffer(buffer);
     _artifactFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
-    _lpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     _hpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     for (int ch = 0; ch < block.getNumChannels(); ++ch)
