@@ -116,10 +116,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2ID, 1 }, band2Name, false));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3ID, 1 }, band3Name, false));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band4ID, 1 }, band4Name, false));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band1MixID, 1 }, band1MixName, 0.0f, 100.0f, 100.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0.0f, 100.0f, 100.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0.0f, 100.0f, 100.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0.0f, 100.0f, 100.0f));
+    params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { band1MixID, 1 }, band1MixName, 0, 100, 100));
+    params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { band2MixID, 1 }, band2MixName, 0, 100, 100));
+    params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { band3MixID, 1 }, band3MixName, 0, 100, 100));
+    params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { band4MixID, 1 }, band4MixName, 0, 100, 100));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band1SoloID, 1 }, band1SoloName, false));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band2SoloID, 1 }, band2SoloName, false));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { band3SoloID, 1 }, band3SoloName, false));
@@ -128,10 +128,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     // Crusher
     auto bitDepthRange = juce::NormalisableRange<float> (1.0f, 16.0f, 1.0f);
     bitDepthRange.setSkewForCentre(5.0);
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 8.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 1.0f), 45.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 10.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0.0f, 1.0f, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { bitDepth1ID, 1 }, bitDepth1Name, bitDepthRange, 16.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { resampleRateID, 1 }, resampleRateName, juce::NormalisableRange<float> (1.0f, 50.0f, 0.01f), 50.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { driveID, 1 }, driveName, 0.0f, 20.0f, 0.0f));
+    params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { masterMixID, 1 }, masterMixName, 0, 100, 100));
     
     // Filters
     auto passFilterRange = juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f);
@@ -199,7 +199,7 @@ void MarauderAudioProcessor::updateParameters()
     _aliasFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
     _artifactFilter.setCutoff(_treeState.getRawParameterValue(resampleRateID)->load() * 882 * 0.4);
     _marauder.setDrive(_treeState.getRawParameterValue(driveID)->load());
-    _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load());
+    _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load() * 0.01);
     
     _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(lpID)->load());
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(hpID)->load());

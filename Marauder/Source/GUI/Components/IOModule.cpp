@@ -13,13 +13,17 @@
 
 //==============================================================================
 IOModule::IOModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProcessor(p), _settingsPage(s)
-, _inputDial(0, " dB", -24.0, 24.0)
-, _outputDial(0, " dB", -24.0, 24.0)
+, _inputDial(0, " dB", -24.0, 24.0, false)
+, _outputDial(0, " dB", -24.0, 24.0, false)
 , _skeuPhaseToggle(false, "HQ", true)
 , _skeuHQToggle (true, "HQ", false)
 , _flatInputDial(" dB", "Input", -24.0, 24.0, 0.01, 0.0)
 , _flatOutputDial(" dB", "Output", -24.0, 24.0, 0.01, 0.0)
 {
+    addAndMakeVisible(_mainBorder);
+    _mainBorder.setText("Input-Output");
+    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
+    
     // Skeu Input
     addAndMakeVisible(_inputDial);
     _inputDial.setDoubleClickReturnValue(true, 0.0);
@@ -85,6 +89,9 @@ void IOModule::paint (juce::Graphics& g)
     
     updateToggleColors(_skeuPhaseToggle);
     updateToggleColors(_skeuHQToggle);
+    
+    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
+
 }
 
 void IOModule::resized()
@@ -95,7 +102,6 @@ void IOModule::resized()
     // Skeuomorphic
     if (_settingsPage.getUIType())
     {
-        activateFlatComps(false);
         const auto ySkeuDialSpace = 1.3;
         const auto skeuDialSize = getWidth() * 0.55;
         const auto toggleX = getWidth() * 0.31;
@@ -104,6 +110,8 @@ void IOModule::resized()
         _inputDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
         _outputDial.setBounds(dialX, _inputDial.getY() + _inputDial.getHeight() * ySkeuDialSpace, skeuDialSize, skeuDialSize);
         _skeuPhaseToggle.setBounds(toggleX, _outputDial.getY() + _outputDial.getHeight(), toggleSize, toggleSize);
+        
+        activateFlatComps(false);
         activateSkeuComps(true);
     }
     
@@ -116,8 +124,12 @@ void IOModule::resized()
         _flatInputDial.setBounds(dialX, dialY, flatDialSize, flatDialSize);
         _flatOutputDial.setBounds(dialX, _inputDial.getY() + _inputDial.getHeight() * yFlatDialSpace, flatDialSize, flatDialSize);
         _flatPhaseToggle.setBounds(_flatOutputDial.getX() + _flatOutputDial.getWidth() * 0.25, _flatOutputDial.getY() + _flatOutputDial.getHeight() * 1.1, flatDialSize * 0.5, flatDialSize * 0.18);
+        
+        activateSkeuComps(false);
         activateFlatComps(true);
     }
+    
+    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
 }
 
 void IOModule::activateSkeuComps(bool shouldBeOn)

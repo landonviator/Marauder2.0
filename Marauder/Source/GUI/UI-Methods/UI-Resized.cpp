@@ -21,15 +21,15 @@ void MarauderAudioProcessorEditor::uiResized()
     _ioComp.resized();
     
     // MB Module
-    _multibandComp.setBounds(_ioComp.getX() + _ioComp.getWidth() + padding, headerBottomMargin + padding, getWidth() * 0.2, getHeight() - headerBottomMargin * 2);
+    _multibandComp.setBounds(_ioComp.getX() + _ioComp.getWidth() + padding, headerBottomMargin + padding, getWidth() * 0.25, getHeight() - headerBottomMargin * 2);
     _multibandComp.resized();
     
     // Bit Crusher Module
-    _bitCrusherComp.setBounds(_multibandComp.getX() + _multibandComp.getWidth() + padding, headerBottomMargin + padding, getWidth() * 0.35, _multibandComp.getHeight() * 0.66);
+    _bitCrusherComp.setBounds(_multibandComp.getX() + _multibandComp.getWidth() + padding, headerBottomMargin + padding, getWidth() * 0.25, _multibandComp.getHeight() * 0.66);
     _bitCrusherComp.resized();
     
     // Delay Module
-    _delayComp.setBounds(_bitCrusherComp.getX(), _bitCrusherComp.getY() + _bitCrusherComp.getHeight() * 1.02, getWidth() * 0.35, _multibandComp.getHeight() * 0.33);
+    _delayComp.setBounds(_bitCrusherComp.getX(), _bitCrusherComp.getY() + _bitCrusherComp.getHeight() * 1.02, getWidth() * 0.25, _multibandComp.getHeight() * 0.33);
     _delayComp.resized();
     
     // Filter Module

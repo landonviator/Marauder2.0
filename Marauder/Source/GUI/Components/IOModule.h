@@ -31,6 +31,8 @@ private:
     MarauderAudioProcessor& audioProcessor;
     SettingsPage& _settingsPage;
     
+    juce::GroupComponent _mainBorder;
+    
     using sliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     using buttonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     

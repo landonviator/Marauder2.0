@@ -13,10 +13,10 @@
 
 //==============================================================================
 MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProcessor(p), _settingsPage(s)
-, _band1MixDial(2, " %", 0.0, 100.0)
-, _band2MixDial(2, " %", 0.0, 100.0)
-, _band3MixDial(2, " %", 0.0, 100.0)
-, _band4MixDial(2, " %", 0.0, 100.0)
+, _band1MixDial(2, " %", 0.0, 100.0, true)
+, _band2MixDial(2, " %", 0.0, 100.0, true)
+, _band3MixDial(2, " %", 0.0, 100.0, true)
+, _band4MixDial(2, " %", 0.0, 100.0, true)
 , _band1Mute(true, "M", false)
 , _band1Solo(true, "S", false)
 , _band2Mute(true, "M", false)
@@ -30,8 +30,9 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
 , _band3FlatMixDial(" %", "Band 3", 0.0, 100.0, 1.0, 100.0)
 , _band4FlatMixDial(" %", "Band 4", 0.0, 100.0, 1.0, 100.0)
 {
-    //addAndMakeVisible(_mainBorder);
+    addAndMakeVisible(_mainBorder);
     _mainBorder.setText("Multiband Module");
+    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
     
     for (auto& dial : skeuDials)
     {
@@ -128,22 +129,22 @@ void MultibandModule::paint (juce::Graphics& g)
     }
     
     updateFlatColors();
+    
+    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
 }
 
 void MultibandModule::resized()
 {
-    _mainBorder.setBounds(getLocalBounds());
+    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
     
-    const auto dialX = getWidth() * 0.01;
+    const auto dialX = getWidth() * 0.07;
     const auto dialY = getHeight() * 0.12;
-    const auto ySkeuDialSpace = 2.0;
-    const auto skeuDialSize = getWidth() * 0.5;
+    const auto ySkeuDialSpace = 1.7;
+    const auto skeuDialSize = getWidth() * 0.45;
     
     // Skeuomorphic
     if (_settingsPage.getUIType())
     {
-        activateFlatComps(false);
-        
         _band1MixDial.setBounds(dialX,
                                 dialY,
                                 skeuDialSize,
@@ -168,7 +169,7 @@ void MultibandModule::resized()
                              _band1MixDial.getY() + _band1MixDial.getHeight(),
                              _band1MixDial.getWidth() * 0.5, _band1MixDial.getWidth() * 0.4);
         
-        _band1Solo.setBounds(_band1MixDial.getWidth() * 0.5,
+        _band1Solo.setBounds(_band1MixDial.getX() + _band1MixDial.getWidth() * 0.5,
                              _band1Mute.getY(),
                              _band1Mute.getWidth(), _band1Mute.getHeight());
         
@@ -184,7 +185,7 @@ void MultibandModule::resized()
                              _band3MixDial.getY() + _band3MixDial.getHeight(),
                              _band3MixDial.getWidth() * 0.5, _band3MixDial.getWidth() * 0.4);
         
-        _band3Solo.setBounds(_band3MixDial.getWidth() * 0.5,
+        _band3Solo.setBounds(_band1Solo.getX(),
                              _band3Mute.getY(),
                              _band3Mute.getWidth(), _band3Mute.getHeight());
         
@@ -195,53 +196,73 @@ void MultibandModule::resized()
         _band4Solo.setBounds(_band4MixDial.getX() + _band4MixDial.getWidth() * 0.5,
                              _band4Mute.getY(),
                              _band4Mute.getWidth(), _band4Mute.getHeight());
+        
+        activateFlatComps(false);
         activateSkeuComps(true);
     }
     
     // Flat
     else
     {
-        activateSkeuComps(false);
-
-        _band1FlatMixDial.setBounds(dialX,
+        const auto flatDialX = getWidth() * 0.04;
+        const auto flatDialSpace = 1.08;
+        
+        _band1FlatMixDial.setBounds(flatDialX,
                                 dialY,
                                 skeuDialSize,
                                 skeuDialSize);
         
-        const auto toggleWidth = _band1FlatMixDial.getWidth() * 0.4;
-        const auto toggleHeight = toggleWidth * 0.5;
-        const auto leftSpace = 6.0;
-        const auto leftPadding = 0.55;
-        const auto secondSpace = 1.07;
-        const auto toggleTop = 1.1;
         
-        _band1FlatMute.setBounds(_band1FlatMixDial.getX() * leftSpace, _band1FlatMixDial.getY() + _band1FlatMixDial.getHeight() * toggleTop, toggleWidth, toggleHeight);
-        _band1FlatSolo.setBounds(_band1FlatMixDial.getX() + _band1FlatMixDial.getWidth() * leftPadding, _band1FlatMute.getY(), toggleWidth, toggleHeight);
-        
-        _band2FlatMixDial.setBounds(_band1MixDial.getX() + _band1MixDial.getWidth(),
-                                _band1MixDial.getY(),
+        _band2FlatMixDial.setBounds(_band1FlatMixDial.getX() + _band1FlatMixDial.getWidth() * flatDialSpace,
+                                _band1FlatMixDial.getY(),
                                 skeuDialSize,
                                 skeuDialSize);
         
-        _band2FlatMute.setBounds(_band2FlatMixDial.getX() * secondSpace, _band2FlatMixDial.getY() + _band2FlatMixDial.getHeight() * toggleTop, toggleWidth, toggleHeight);
-        _band2FlatSolo.setBounds(_band2FlatMixDial.getX() + _band2FlatMixDial.getWidth() * leftPadding, _band2FlatMute.getY(), toggleWidth, toggleHeight);
         
-        _band3FlatMixDial.setBounds(dialX,
-                                _band2MixDial.getY() + _band2MixDial.getHeight() * ySkeuDialSpace,
+        _band3FlatMixDial.setBounds(flatDialX,
+                                _band2FlatMixDial.getY() + _band2FlatMixDial.getHeight() * ySkeuDialSpace,
                                 skeuDialSize,
                                 skeuDialSize);
         
-        _band3FlatMute.setBounds(_band3FlatMixDial.getX() * leftSpace, _band3FlatMixDial.getY() + _band3FlatMixDial.getHeight() * toggleTop, toggleWidth, toggleHeight);
-        _band3FlatSolo.setBounds(_band3FlatMixDial.getX() + _band3FlatMixDial.getWidth() * leftPadding, _band3FlatMute.getY(), toggleWidth, toggleHeight);
         
-        _band4FlatMixDial.setBounds(_band1MixDial.getX() + _band1MixDial.getWidth(),
-                                _band3MixDial.getY(),
+        _band4FlatMixDial.setBounds(_band1FlatMixDial.getX() + _band1FlatMixDial.getWidth() * flatDialSpace,
+                                _band3FlatMixDial.getY(),
                                 skeuDialSize,
                                 skeuDialSize);
         
-        _band4FlatMute.setBounds(_band4FlatMixDial.getX() * secondSpace, _band4FlatMixDial.getY() + _band4FlatMixDial.getHeight() * toggleTop, toggleWidth, toggleHeight);
-        _band4FlatSolo.setBounds(_band4FlatMixDial.getX() + _band4FlatMixDial.getWidth() * leftPadding, _band4FlatMute.getY(), toggleWidth, toggleHeight);
+        _band1FlatMute.setBounds(_band1FlatMixDial.getX(),
+                             _band1FlatMixDial.getY() + _band1FlatMixDial.getHeight(),
+                             _band1FlatMixDial.getWidth() * 0.45, _band1FlatMixDial.getWidth() * 0.2);
         
+        _band1FlatSolo.setBounds(_band1FlatMixDial.getX() + _band1FlatMixDial.getWidth() * 0.55,
+                             _band1FlatMute.getY(),
+                             _band1FlatMute.getWidth(), _band1FlatMute.getHeight());
+        
+        _band2FlatMute.setBounds(_band2FlatMixDial.getX(),
+                             _band2FlatMixDial.getY() + _band2FlatMixDial.getHeight(),
+                             _band2FlatMixDial.getWidth() * 0.45, _band2FlatMixDial.getWidth() * 0.2);
+        
+        _band2FlatSolo.setBounds(_band2FlatMixDial.getX() + _band2FlatMixDial.getWidth() * 0.55,
+                             _band2FlatMute.getY(),
+                             _band2FlatMute.getWidth(), _band2FlatMute.getHeight());
+        
+        _band3FlatMute.setBounds(_band3FlatMixDial.getX(),
+                             _band3FlatMixDial.getY() + _band3FlatMixDial.getHeight(),
+                             _band3FlatMixDial.getWidth() * 0.45, _band3FlatMixDial.getWidth() * 0.2);
+        
+        _band3FlatSolo.setBounds(_band3FlatMixDial.getX() + _band3FlatMixDial.getWidth() * 0.55,
+                             _band3FlatMute.getY(),
+                             _band3FlatMute.getWidth(), _band3FlatMute.getHeight());
+        
+        _band4FlatMute.setBounds(_band4FlatMixDial.getX(),
+                             _band4FlatMixDial.getY() + _band4FlatMixDial.getHeight(),
+                             _band4FlatMixDial.getWidth() * 0.45, _band4FlatMixDial.getWidth() * 0.2);
+        
+        _band4FlatSolo.setBounds(_band4FlatMixDial.getX() + _band4FlatMixDial.getWidth() * 0.55,
+                             _band4FlatMute.getY(),
+                             _band4FlatMute.getWidth(), _band4FlatMute.getHeight());
+        
+        activateSkeuComps(false);
         activateFlatComps(true);
     }
 }
@@ -428,6 +449,8 @@ void MultibandModule::resetMuteSoloLogic()
         if (toggle->getToggleState())
         {
             toggle->setToggleState(false, juce::dontSendNotification);
+            toggle->triggerClick();
+            toggle->triggerClick();
         }
     }
     
@@ -436,6 +459,8 @@ void MultibandModule::resetMuteSoloLogic()
         if (toggle->getToggleState())
         {
             toggle->setToggleState(false, juce::dontSendNotification);
+            toggle->triggerClick();
+            toggle->triggerClick();
         }
     }
 }
