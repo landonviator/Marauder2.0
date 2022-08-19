@@ -13,10 +13,12 @@
 
 //==============================================================================
 DelayModule::DelayModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProcessor(p), _settingsPage(s)
-, _delayDial(1, "", 0.0, 1700.0, true)
-, _feedbackDial(1, "", 0.0, 0.95, false)
+, _delayDial(0, "", 0.0, 1700.0, true)
+, _feedbackDial(0, "", 0.0, 0.95, false)
+, _delayLPDial(0, "", 20.0, 20000.0, true)
 , _delayFlatDial("", "", 0.0, 1700.0, 1.0, 0.0)
 , _feedbackFlatDial("", "", 0.0, 95.0, 0.01, 0.0)
+, _delayLPFlatDial("", "", 20.0, 20000.0, 1.0, 1000.0)
 {
     addAndMakeVisible(_mainBorder);
     _mainBorder.setText("Delay Module");
@@ -29,6 +31,7 @@ DelayModule::DelayModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProc
     
     _delayDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, delayTimeID, _delayDial);
     _feedbackDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, feedbackID, _feedbackDial);
+    _delayLPDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, delayLPID, _delayLPDial);
     
     for (auto& label : skeuLabels)
     {
@@ -42,6 +45,7 @@ DelayModule::DelayModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProc
     
     _delayFlatDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, delayTimeID, _delayFlatDial);
     _feedbackFlatDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, feedbackID, _feedbackFlatDial);
+    _delayLPFlatDialAttach = std::make_unique<sliderAttachment>(audioProcessor._treeState, delayLPID, _delayLPFlatDial);
     
     for (auto& label : flatLabels)
     {
@@ -58,6 +62,7 @@ void DelayModule::paint (juce::Graphics& g)
     // Paint background
     g.setColour(m_mainCompColor.withAlpha(0.2f));
     g.drawLine(0, getHeight() * 0.125, 0, getHeight() * 0.875, 3);
+    g.drawLine(getWidth() * 0.125, 0, getWidth() * 0.875, 0, 3);
     
     for (auto& dial : skeuDials)
     {
@@ -79,28 +84,29 @@ void DelayModule::paint (juce::Graphics& g)
 
 void DelayModule::resized()
 {
-    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
+    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.057));
     
     const auto dialX = getWidth() * 0.088;
     const auto dialY = getHeight() * 0.29;
-    const auto ySkeuDialSpace = 1.35;
-    const auto xSkeuDialSpace = 1.2;
-    const auto skeuDialSize = getWidth() * 0.38;
-    const auto flatDialSize = getWidth() * 0.4;
-    const auto yFlatDialSpace = 1.25;
+    const auto xSkeuDialSpace = 1.86;
+    const auto skeuDialSize = getWidth() * 0.18;
+    const auto flatDialSize = getWidth() * 0.2;
+    const auto xFlatDialSpace = 1.65;
     
     if (_settingsPage.getUIType())
     {
         _delayDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
         _feedbackDial.setBounds(_delayDial.getX() + _delayDial.getWidth() * xSkeuDialSpace, dialY, skeuDialSize, skeuDialSize);
+        _delayLPDial.setBounds(_feedbackDial.getX() + _feedbackDial.getWidth() * xSkeuDialSpace, dialY, skeuDialSize, skeuDialSize);
         activateFlatComps(false);
         activateSkeuComps(true);
     }
     
     else
     {
-        _delayFlatDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
-        _feedbackFlatDial.setBounds(_delayFlatDial.getX() + _delayFlatDial.getWidth() * xSkeuDialSpace, dialY, skeuDialSize, skeuDialSize);
+        _delayFlatDial.setBounds(dialX, dialY, flatDialSize, flatDialSize);
+        _feedbackFlatDial.setBounds(_delayFlatDial.getX() + _delayFlatDial.getWidth() * xFlatDialSpace, dialY, flatDialSize, flatDialSize);
+        _delayLPFlatDial.setBounds(_feedbackFlatDial.getX() + _feedbackFlatDial.getWidth() * xFlatDialSpace, dialY, flatDialSize, flatDialSize);
         activateFlatComps(true);
         activateSkeuComps(false);
     }

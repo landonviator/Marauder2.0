@@ -57,7 +57,7 @@ SettingsPage::~SettingsPage()
 
 void SettingsPage::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::black.withAlpha(0.5f));
+    g.fillAll(juce::Colours::black.withAlpha(0.75f));
     
     /** Buttons */
     for (auto& button : buttons)

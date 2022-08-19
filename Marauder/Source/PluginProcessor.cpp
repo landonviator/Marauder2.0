@@ -55,6 +55,7 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     // Delay
     _treeState.addParameterListener(delayTimeID, this);
     _treeState.addParameterListener(feedbackID, this);
+    _treeState.addParameterListener(delayLPID, this);
 }
 
 MarauderAudioProcessor::~MarauderAudioProcessor()
@@ -92,6 +93,7 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     // Delay
     _treeState.removeParameterListener(delayTimeID, this);
     _treeState.removeParameterListener(feedbackID, this);
+    _treeState.removeParameterListener(delayLPID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::createParameterLayout()
@@ -145,6 +147,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { delayTimeID, 1 }, delayTimeName, delayRange, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { feedbackID, 1 }, feedbackName, 0.0f, 0.95f, 0.0f));
     
+    auto delayFilterRange = juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f);
+    delayFilterRange.setSkewForCentre(1000.0);
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { delayLPID, 1 }, delayLPName, delayFilterRange, 1000.0f));
+    
     return { params.begin(), params.end() };
 }
 
@@ -196,13 +202,16 @@ void MarauderAudioProcessor::updateParameters()
     auto rate = juce::jmap(_treeState.getRawParameterValue(resampleRateID)->load(), 1.0f, 50.0f, 50.0f, 1.0f);
     _marauder.setResampledRate(rate);
     
-    _aliasFilter.setCutoff(_treeState.getRawParameterValue(lpID)->load());
-    _artifactFilter.setCutoff(_treeState.getRawParameterValue(lpID)->load());
+    _aliasFilter.setCutoffFrequency(_treeState.getRawParameterValue(lpID)->load());
+    _artifactFilter.setCutoffFrequency(_treeState.getRawParameterValue(lpID)->load());
     
     _marauder.setDrive(_treeState.getRawParameterValue(driveID)->load());
     _marauder.setMasterMix(_treeState.getRawParameterValue(masterMixID)->load() * 0.01);
     
+    _feedbackLPFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(delayLPID)->load());
+    
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(hpID)->load());
+    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(lpID)->load());
 }
 
 //==============================================================================
@@ -294,18 +303,24 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     _outputGainModule.prepare(spec);
     _marauder.prepare(spec);
     _aliasFilter.prepare(spec);
+    _aliasFilter.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
     _artifactFilter.prepare(spec);
+    _artifactFilter.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
     
     _hpFilter.prepare(spec);
     _hpFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kHighPass);
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
     
-    _feedbackFilter.prepare(spec);
-    _feedbackFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
-    _feedbackFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kLowPass);
-    _feedbackFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
-    _feedbackFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, 1000.0);
+    _lpFilter.prepare(spec);
+    _lpFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
+    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kLowPass);
+    _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
+    
+    _feedbackLPFilter.prepare(spec);
+    _feedbackLPFilter.setStereoType(viator_dsp::SVFilter<float>::StereoId::kStereo);
+    _feedbackLPFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kType, viator_dsp::SVFilter<float>::FilterType::kLowPass);
+    _feedbackLPFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kQType, viator_dsp::SVFilter<float>::QType::kParametric);
     
     delay.prepare (spec);
     linear.prepare (spec);
@@ -397,7 +412,6 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     _marauder.processBuffer(buffer);
     _artifactFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
-    _hpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     for (int ch = 0; ch < block.getNumChannels(); ++ch)
     {
@@ -412,9 +426,12 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
             linear.setDelay ((float) delayAmount);
             data[sample] += linear.popSample ((int) ch);
                                     
-            lastDelayOutput[ch] = _feedbackFilter.processSample(data[sample], ch) * _treeState.getRawParameterValue(feedbackID)->load();
+            lastDelayOutput[ch] = _feedbackLPFilter.processSample(data[sample], ch) * _treeState.getRawParameterValue(feedbackID)->load();
         }
     }
+    
+    _hpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    _lpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     
     // Apply phase invert
     if (_treeState.getRawParameterValue(phaseID)->load())

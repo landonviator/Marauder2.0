@@ -29,11 +29,11 @@ void MarauderAudioProcessorEditor::uiResized()
     _bitCrusherComp.resized();
     
     // Delay Module
-    _delayComp.setBounds(_bitCrusherComp.getX(), _bitCrusherComp.getY() + _bitCrusherComp.getHeight() * 1.02, getWidth() * 0.25, _multibandComp.getHeight() * 0.33);
+    _delayComp.setBounds(_bitCrusherComp.getX(), _bitCrusherComp.getY() + _bitCrusherComp.getHeight() * 1.02, getWidth() * 0.48, _multibandComp.getHeight() * 0.33);
     _delayComp.resized();
     
     // Filter Module
-    _filterComp.setBounds(_delayComp.getX() + _delayComp.getWidth(), _bitCrusherComp.getY(), getWidth() * 0.19, _multibandComp.getHeight());
+    _filterComp.setBounds(_bitCrusherComp.getX() + _bitCrusherComp.getWidth(), _bitCrusherComp.getY(), getWidth() * 0.19, _bitCrusherComp.getHeight());
     _filterComp.resized();
     
     // Save Plugin Window Size

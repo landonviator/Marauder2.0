@@ -98,3 +98,6 @@ extern const juce::String delayTimeName;
 
 extern const juce::String feedbackID;
 extern const juce::String feedbackName;
+
+extern const juce::String delayLPID;
+extern const juce::String delayLPName;

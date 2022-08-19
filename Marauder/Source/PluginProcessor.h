@@ -78,9 +78,10 @@ private:
     juce::dsp::Gain<float> _outputGainModule;
     juce::dsp::Oversampling<float> _oversamplingModule;
     viator_dsp::Marauder<float> _marauder;
-    viator_dsp::BrickWallLPF _aliasFilter;
-    viator_dsp::BrickWallLPF _artifactFilter;
+    juce::dsp::LinkwitzRileyFilter<float> _aliasFilter;
+    juce::dsp::LinkwitzRileyFilter<float> _artifactFilter;
     viator_dsp::SVFilter<float> _hpFilter;
+    viator_dsp::SVFilter<float> _lpFilter;
     void hqProcessBlock(juce::AudioBuffer<float>& buffer);
     void normalProcessBlock(juce::AudioBuffer<float>& buffer);
     bool hqToggle;
@@ -93,7 +94,7 @@ private:
     std::array<float, 2> delayValue { {} };
     std::array<float, 2> lastDelayOutput;
     std::array<juce::LinearSmoothedValue<float>, 2> delayFeedbackVolume;
-    viator_dsp::SVFilter<float> _feedbackFilter;
+    viator_dsp::SVFilter<float> _feedbackLPFilter;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MarauderAudioProcessor)

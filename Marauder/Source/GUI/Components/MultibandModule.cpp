@@ -31,7 +31,7 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
 , _band4FlatMixDial(" %", "Band 4", 0.0, 100.0, 1.0, 100.0)
 {
     addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("Multiband Module");
+    _mainBorder.setText("Multiband Bit-Crusher Module");
     _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
     
     for (auto& dial : skeuDials)

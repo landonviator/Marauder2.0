@@ -23,7 +23,6 @@ BitCrusherModule::BitCrusherModule(MarauderAudioProcessor& p, SettingsPage& s) :
 , _mixDialFlat(" %", "", 0.0, 100.0, 1.0, 100.0)
 {
     addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("Bit Crusher Module");
     _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
     
     for (auto& dial : skeuDials)
@@ -63,11 +62,6 @@ BitCrusherModule::~BitCrusherModule()
 
 void BitCrusherModule::paint (juce::Graphics& g)
 {
-    
-    // Paint background
-    g.setColour(m_mainCompColor.withAlpha(0.2f));
-    g.drawLine(0, getHeight() * 0.125, 0, getHeight() * 0.875, 3);
-    g.drawLine(getWidth() * 0.125, getHeight(), getWidth() * 0.875, getHeight(), 3);
     
     for (auto& dial : skeuDials)
     {
