@@ -82,9 +82,12 @@ void FilterModule::resized()
     _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
     
     const auto dialX = getWidth() * 0.4;
+    const auto flatX = getWidth() * 0.37;
     const auto dialY = getHeight() * 0.17;
+    const auto flatY = getHeight() * 0.1;
     const auto ySkeuDialSpace = 1.3;
     const auto skeuDialSize = getWidth() * 0.5;
+    const auto flatDialSize = getWidth() * 0.58;
     
     if (_settingsPage.getUIType())
     {
@@ -96,8 +99,8 @@ void FilterModule::resized()
     
     else
     {
-        _lpFlatDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
-        _hpFlatDial.setBounds(_lpDial.getX(), _lpDial.getY() + _lpDial.getHeight() * ySkeuDialSpace, skeuDialSize, skeuDialSize);
+        _lpFlatDial.setBounds(flatX, flatY, flatDialSize, flatDialSize);
+        _hpFlatDial.setBounds(_lpFlatDial.getX(), _lpFlatDial.getY() + _lpFlatDial.getHeight() * ySkeuDialSpace, flatDialSize, flatDialSize);
         activateFlatComps(true);
         activateSkeuComps(false);
     }

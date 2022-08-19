@@ -90,8 +90,10 @@ void BitCrusherModule::resized()
     const auto ySkeuDialSpace = 1.35;
     const auto xSkeuDialSpace = 1.2;
     const auto skeuDialSize = getWidth() * 0.38;
-    const auto flatDialSize = getWidth() * 0.4;
+    const auto flatDialSize = getWidth() * 0.45;
     const auto yFlatDialSpace = 1.25;
+    const auto flatX = 0;
+    const auto flatY = getHeight() * 0.09;
     
     // Skeuomorphic
     if (_settingsPage.getUIType())
@@ -106,8 +108,8 @@ void BitCrusherModule::resized()
     
     else
     {
-        _crushDialFlat.setBounds(dialX, dialY, flatDialSize, flatDialSize);
-        _resampleDialFlat.setBounds(_crushDialFlat.getX() + _crushDialFlat.getWidth() * xSkeuDialSpace, dialY, flatDialSize, flatDialSize);
+        _crushDialFlat.setBounds(flatX, flatY, flatDialSize, flatDialSize);
+        _resampleDialFlat.setBounds(_crushDialFlat.getX() + _crushDialFlat.getWidth() * xSkeuDialSpace, _crushDialFlat.getY(), flatDialSize, flatDialSize);
         _driveDialFlat.setBounds(_crushDialFlat.getX(), _crushDialFlat.getY() + _crushDialFlat.getHeight() * yFlatDialSpace, flatDialSize, flatDialSize);
         _mixDialFlat.setBounds(_resampleDialFlat.getX(), _driveDialFlat.getY(), flatDialSize, flatDialSize);
         activateFlatComps(true);

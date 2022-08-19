@@ -44,6 +44,7 @@ public:
 private:
     
     MarauderAudioProcessor& audioProcessor;
+    using buttonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     
     /** Menus */
     juce::ComboBox m_themeMenu;
@@ -88,6 +89,8 @@ private:
     // UI Style
     juce::TextButton _skueomorphic;
     juce::TextButton _flat;
+    std::unique_ptr<buttonAttachment> _skueomorphicAttach;
+    std::unique_ptr<buttonAttachment> _flatAttach;
     
     void setTextButtonProps(juce::TextButton& button);
     

@@ -27,16 +27,18 @@ SettingsPage::SettingsPage(MarauderAudioProcessor& p) : audioProcessor(p)
         setTextButtonProps(*button);
     }
     
-    _skueomorphic.setToggleState(true, juce::dontSendNotification);
-    _skueomorphic.onStateChange = [this]()
+    _skueomorphicAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, realID, _skueomorphic);
+    _flatAttach = std::make_unique<buttonAttachment>(audioProcessor._treeState, flatID, _flat);
+    
+    _skueomorphic.onClick = [this]()
     {
         getParentComponent()->resized();
     };
     
-//    _flat.onStateChange = [this]()
-//    {
-//        getParentComponent()->resized();
-//    };
+    _flat.onClick = [this]()
+    {
+        getParentComponent()->resized();
+    };
     
     /** Groups */
     for (auto& group : groups)
@@ -49,6 +51,7 @@ SettingsPage::SettingsPage(MarauderAudioProcessor& p) : audioProcessor(p)
     
     _flat.setButtonText("Flat");
     _flat.setRadioGroupId(1);
+    
 }
 
 SettingsPage::~SettingsPage()

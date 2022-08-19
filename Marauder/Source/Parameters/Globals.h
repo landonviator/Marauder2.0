@@ -101,3 +101,9 @@ extern const juce::String feedbackName;
 
 extern const juce::String delayLPID;
 extern const juce::String delayLPName;
+
+extern const juce::String flatID;
+extern const juce::String flatName;
+
+extern const juce::String realID;
+extern const juce::String realName;

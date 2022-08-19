@@ -13,7 +13,6 @@ MarauderAudioProcessor::MarauderAudioProcessor()
                      #endif
                        )
 , _treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
-, _oversamplingModule(2, 2, juce::dsp::Oversampling<float>::FilterType::filterHalfBandPolyphaseIIR)
 #endif
 {
     
@@ -21,12 +20,14 @@ MarauderAudioProcessor::MarauderAudioProcessor()
     variableTree.setProperty("gradienttoggle", 1, nullptr);
     variableTree.setProperty("glowtoggle", 0, nullptr);
     variableTree.setProperty("gradienttoggle", 1, nullptr);
+    variableTree.setProperty("skeutoggle", 1, nullptr);
     
     _treeState.addParameterListener(inputID, this);
     _treeState.addParameterListener(outputID, this);
     _treeState.addParameterListener(phaseID, this);
-    _treeState.addParameterListener(hqID, this);
     _treeState.addParameterListener(presetID, this);
+    _treeState.addParameterListener(flatID, this);
+    _treeState.addParameterListener(realID, this);
     
     // Bands
     _treeState.addParameterListener(band1ID, this);
@@ -63,8 +64,9 @@ MarauderAudioProcessor::~MarauderAudioProcessor()
     _treeState.removeParameterListener(inputID, this);
     _treeState.removeParameterListener(outputID, this);
     _treeState.removeParameterListener(phaseID, this);
-    _treeState.removeParameterListener(hqID, this);
     _treeState.removeParameterListener(presetID, this);
+    _treeState.removeParameterListener(flatID, this);
+    _treeState.removeParameterListener(realID, this);
     
     // Bands
     _treeState.removeParameterListener(band1ID, this);
@@ -103,12 +105,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     // Presets
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { presetID, 1 }, presetName, 0, 9, 0));
     
+    // Settings
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { flatID, 1 }, flatName, false));
+    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { realID, 1 }, realName, true));
+    
     // IO
     auto ioRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f);
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { inputID, 1 }, inputName, ioRange, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { outputID, 1 }, outputName, ioRange, 0.0f));
     params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { phaseID, 1 }, phaseName, false));
-    params.push_back (std::make_unique<juce::AudioParameterBool>(juce::ParameterID { hqID, 1 }, hqName, false));
     
     // Colors
     params.push_back (std::make_unique<juce::AudioParameterInt>(juce::ParameterID { colorID, 1 }, colorName, 0, 9, 0));
@@ -145,7 +150,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
     auto delayRange = juce::NormalisableRange<float> (0.0f, 1700.0f, 1.0f);
     delayRange.setSkewForCentre(440.0);
     params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { delayTimeID, 1 }, delayTimeName, delayRange, 0.0f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { feedbackID, 1 }, feedbackName, 0.0f, 0.95f, 0.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>(juce::ParameterID { feedbackID, 1 }, feedbackName, 0.0f, 0.95f, 0.95f));
     
     auto delayFilterRange = juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f);
     delayFilterRange.setSkewForCentre(1000.0);
@@ -156,35 +161,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout MarauderAudioProcessor::crea
 
 void MarauderAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
-    if (parameterID == hqID)
-    {
-        hqToggle = static_cast<bool>(_treeState.getRawParameterValue(hqID)->load());
-            
-        // Adjust samplerate of filters when oversampling
-        if (hqToggle)
-        {
-            spec.sampleRate = getSampleRate() * _oversamplingModule.getOversamplingFactor();
-            _inputGainModule.prepare(spec);
-            _outputGainModule.prepare(spec);
-            _marauder.prepare(spec);
-        }
-
-        else
-        {
-            spec.sampleRate = getSampleRate();
-            _inputGainModule.prepare(spec);
-            _outputGainModule.prepare(spec);
-            _marauder.prepare(spec);
-        }
-    }
-            
     updateParameters();
 }
 
 void MarauderAudioProcessor::updateParameters()
 {
     _inputGainModule.setGainDecibels(_treeState.getRawParameterValue(inputID)->load());
-    _outputGainModule.setGainDecibels(_treeState.getRawParameterValue(outputID)->load());
+    _outputGainModule.setGainDecibels(_treeState.getRawParameterValue(outputID)->load() - 3.0);
     
     _marauder.toggleBand1(!_treeState.getRawParameterValue(band1ID)->load());
     _marauder.toggleBand2(!_treeState.getRawParameterValue(band2ID)->load());
@@ -210,6 +193,7 @@ void MarauderAudioProcessor::updateParameters()
     
     _feedbackLPFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(delayLPID)->load());
     
+    delayAmount.setTargetValue(_treeState.getRawParameterValue(delayTimeID)->load());
     _hpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(hpID)->load());
     _lpFilter.setParameter(viator_dsp::SVFilter<float>::ParameterId::kCutoff, _treeState.getRawParameterValue(lpID)->load());
 }
@@ -279,22 +263,7 @@ void MarauderAudioProcessor::changeProgramName (int index, const juce::String& n
 //==============================================================================
 void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Initialize spec for dsp modules
-    hqToggle = static_cast<bool>(_treeState.getRawParameterValue(hqID)->load());
-        
-    // Oversampling
-    _oversamplingModule.initProcessing(samplesPerBlock);
-    
-    if (hqToggle)
-    {
-        spec.sampleRate = sampleRate * _oversamplingModule.getOversamplingFactor();
-    }
-        
-    else
-    {
-        spec.sampleRate = sampleRate;
-    }
-    
+    spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumInputChannels();
     
@@ -330,6 +299,8 @@ void MarauderAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     
     linear.reset();
     std::fill (lastDelayOutput.begin(), lastDelayOutput.end(), 0.0f);
+    
+    delayAmount.reset(spec.sampleRate, 1.0);
     
     // Init params
     updateParameters();
@@ -373,33 +344,6 @@ void MarauderAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     normalProcessBlock(buffer);
 }
 
-void MarauderAudioProcessor::hqProcessBlock(juce::AudioBuffer<float> &buffer)
-{
-    // Blocks
-    juce::dsp::AudioBlock<float> block {buffer};
-    juce::dsp::AudioBlock<float> upSampledBlock (buffer);
-
-    // Up sample
-    upSampledBlock = _oversamplingModule.processSamplesUp(upSampledBlock);
-    
-    // Input
-    _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
-    
-    // Output
-    _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(upSampledBlock));
-    
-    // Apply phase invert
-    if (_treeState.getRawParameterValue(phaseID)->load())
-    {
-        viator_utils::utils::invertBlock(upSampledBlock);
-    }
-    
-    _oversamplingModule.processSamplesDown(block);
-    
-    // Clip output
-    viator_utils::utils::hardClipBlock(block);
-}
-
 void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer)
 {
     // Block
@@ -420,12 +364,9 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
         for (int sample = 0; sample < block.getNumSamples(); ++sample)
         {
             auto input = data[sample] - lastDelayOutput[ch];
-            auto delayAmount = _treeState.getRawParameterValue(delayTimeID)->load();
-
             linear.pushSample (int (ch), input);
-            linear.setDelay ((float) delayAmount);
+            linear.setDelay (delayAmount.getNextValue());
             data[sample] += linear.popSample ((int) ch);
-                                    
             lastDelayOutput[ch] = _feedbackLPFilter.processSample(data[sample], ch) * _treeState.getRawParameterValue(feedbackID)->load();
         }
     }

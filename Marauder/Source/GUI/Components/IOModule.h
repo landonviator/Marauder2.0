@@ -46,7 +46,6 @@ private:
     viator_gui::ToggleButton _skeuPhaseToggle;
     viator_gui::ToggleButton _skeuHQToggle;
     std::unique_ptr<buttonAttachment> _skeuPhaseToggleAttach;
-    std::unique_ptr<buttonAttachment> _skeuHQToggleAttach;
     void activateSkeuComps(bool shouldBeOn);
     void updateFlatColors();
     

@@ -57,7 +57,8 @@ public:
                 { "Parameter", {{ "id", "glowslider" }, { "value", 1 }}},
                 { "Parameter", {{ "id", "glowtoggle" }, { "value", 1 }}},
                 { "Parameter", {{ "id", "gradienttoggle" }, { "value", 1 }}},
-                { "Parameter", {{ "id", "colortheme" }, { "value", 0 }}}
+                { "Parameter", {{ "id", "colortheme" }, { "value", 0 }}},
+                { "Parameter", {{ "id", "skeutoggle" }, { "value", 1 }}}
             }
         }
         }
@@ -76,13 +77,11 @@ private:
     /** DSP */
     juce::dsp::Gain<float> _inputGainModule;
     juce::dsp::Gain<float> _outputGainModule;
-    juce::dsp::Oversampling<float> _oversamplingModule;
     viator_dsp::Marauder<float> _marauder;
     juce::dsp::LinkwitzRileyFilter<float> _aliasFilter;
     juce::dsp::LinkwitzRileyFilter<float> _artifactFilter;
     viator_dsp::SVFilter<float> _hpFilter;
     viator_dsp::SVFilter<float> _lpFilter;
-    void hqProcessBlock(juce::AudioBuffer<float>& buffer);
     void normalProcessBlock(juce::AudioBuffer<float>& buffer);
     bool hqToggle;
     void updateParameters();
@@ -94,6 +93,7 @@ private:
     std::array<float, 2> delayValue { {} };
     std::array<float, 2> lastDelayOutput;
     std::array<juce::LinearSmoothedValue<float>, 2> delayFeedbackVolume;
+    juce::SmoothedValue<float> delayAmount;
     viator_dsp::SVFilter<float> _feedbackLPFilter;
     
     //==============================================================================

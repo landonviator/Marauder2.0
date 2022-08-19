@@ -88,10 +88,12 @@ void DelayModule::resized()
     
     const auto dialX = getWidth() * 0.088;
     const auto dialY = getHeight() * 0.29;
+    const auto flatX = getWidth() * 0.11;
+    const auto flatY = getHeight() * 0.21;
     const auto xSkeuDialSpace = 1.86;
     const auto skeuDialSize = getWidth() * 0.18;
-    const auto flatDialSize = getWidth() * 0.2;
-    const auto xFlatDialSpace = 1.65;
+    const auto flatDialSize = getWidth() * 0.24;
+    const auto xFlatDialSpace = 1.3;
     
     if (_settingsPage.getUIType())
     {
@@ -104,9 +106,9 @@ void DelayModule::resized()
     
     else
     {
-        _delayFlatDial.setBounds(dialX, dialY, flatDialSize, flatDialSize);
-        _feedbackFlatDial.setBounds(_delayFlatDial.getX() + _delayFlatDial.getWidth() * xFlatDialSpace, dialY, flatDialSize, flatDialSize);
-        _delayLPFlatDial.setBounds(_feedbackFlatDial.getX() + _feedbackFlatDial.getWidth() * xFlatDialSpace, dialY, flatDialSize, flatDialSize);
+        _delayFlatDial.setBounds(flatX, flatY, flatDialSize, flatDialSize);
+        _feedbackFlatDial.setBounds(_delayFlatDial.getX() + _delayFlatDial.getWidth() * xFlatDialSpace, flatY, flatDialSize, flatDialSize);
+        _delayLPFlatDial.setBounds(_feedbackFlatDial.getX() + _feedbackFlatDial.getWidth() * xFlatDialSpace, flatY, flatDialSize, flatDialSize);
         activateFlatComps(true);
         activateSkeuComps(false);
     }
