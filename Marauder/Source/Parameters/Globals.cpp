@@ -101,7 +101,7 @@ extern const juce::String feedbackID = "feedback";
 extern const juce::String feedbackName = "Intensity";
 
 extern const juce::String delayLPID = "delayLP";
-extern const juce::String delayLPName = "Delay LP";
+extern const juce::String delayLPName = "Tension LP";
 
 extern const juce::String flatID = "flat";
 extern const juce::String flatName = "Flat";

@@ -40,7 +40,7 @@ private:
     viator_gui::FilmStripKnob _delayLPDial;
     viator_gui::Label _delayDialLabel {"Tension"};
     viator_gui::Label _feedbackDialLabel {"Intensity"};
-    viator_gui::Label _delayLPDialLabel {"Delay LP"};
+    viator_gui::Label _delayLPDialLabel {"Tension LP"};
     std::unique_ptr<sliderAttachment> _delayDialAttach;
     std::unique_ptr<sliderAttachment> _feedbackDialAttach;
     std::unique_ptr<sliderAttachment> _delayLPDialAttach;
@@ -63,7 +63,7 @@ private:
     viator_gui::Dial _delayLPFlatDial;
     viator_gui::Label _delayFlatDialLabel {"Tension"};
     viator_gui::Label _feedbackFlatDialLabel {"Intensity"};
-    viator_gui::Label _delayLPFlatDialLabel {"Delay LP"};
+    viator_gui::Label _delayLPFlatDialLabel {"Tension LP"};
     std::unique_ptr<sliderAttachment> _delayFlatDialAttach;
     std::unique_ptr<sliderAttachment> _feedbackFlatDialAttach;
     std::unique_ptr<sliderAttachment> _delayLPFlatDialAttach;

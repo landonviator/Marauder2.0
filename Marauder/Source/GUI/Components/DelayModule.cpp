@@ -21,7 +21,7 @@ DelayModule::DelayModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProc
 , _delayLPFlatDial("", "", 20.0, 20000.0, 1.0, 1000.0)
 {
     addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("Delay Module");
+    _mainBorder.setText("String Module");
     _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
     
     for (auto& dial : skeuDials)
