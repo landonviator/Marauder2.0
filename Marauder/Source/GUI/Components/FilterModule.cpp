@@ -18,10 +18,6 @@ FilterModule::FilterModule(MarauderAudioProcessor& p, SettingsPage& s) : audioPr
 , _lpFlatDial("", "", 20.0, 20000.0, 0.01, 0.0)
 , _hpFlatDial("", "", 20.0, 20000.0, 1.0, 1000.0)
 {
-    addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("Filter Module");
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
-    
     for (auto& dial : skeuDials)
     {
         addAndMakeVisible(dial);
@@ -73,26 +69,23 @@ void FilterModule::paint (juce::Graphics& g)
     {
         updateSliderColors(*dial);
     }
-    
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
 }
 
 void FilterModule::resized()
 {
-    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
-    
-    const auto dialX = getWidth() * 0.4;
-    const auto flatX = getWidth() * 0.37;
-    const auto dialY = getHeight() * 0.17;
-    const auto flatY = getHeight() * 0.1;
-    const auto ySkeuDialSpace = 1.3;
-    const auto skeuDialSize = getWidth() * 0.5;
-    const auto flatDialSize = getWidth() * 0.58;
+    const auto dialX = getWidth() * 0.075;
+    const auto flatX = getWidth() * 0.075;
+    const auto dialY = getHeight() * 0.28;
+    const auto flatY = getHeight() * 0.28;
+    const auto ySkeuDialSpace = 1.17;
+    const auto yFlatDialSpace = 1.17;
+    const auto skeuDialSize = getWidth() * 0.35;
+    const auto flatDialSize = getWidth() * 0.38;
     
     if (_settingsPage.getUIType())
     {
         _lpDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
-        _hpDial.setBounds(_lpDial.getX(), _lpDial.getY() + _lpDial.getHeight() * ySkeuDialSpace, skeuDialSize, skeuDialSize);
+        _hpDial.setBounds(_lpDial.getX() + _lpDial.getWidth() * ySkeuDialSpace, _lpDial.getY(), skeuDialSize, skeuDialSize);
         activateFlatComps(false);
         activateSkeuComps(true);
     }
@@ -100,7 +93,7 @@ void FilterModule::resized()
     else
     {
         _lpFlatDial.setBounds(flatX, flatY, flatDialSize, flatDialSize);
-        _hpFlatDial.setBounds(_lpFlatDial.getX(), _lpFlatDial.getY() + _lpFlatDial.getHeight() * ySkeuDialSpace, flatDialSize, flatDialSize);
+        _hpFlatDial.setBounds(_lpFlatDial.getX() + _lpFlatDial.getWidth() * yFlatDialSpace, _lpFlatDial.getY(), flatDialSize, flatDialSize);
         activateFlatComps(true);
         activateSkeuComps(false);
     }

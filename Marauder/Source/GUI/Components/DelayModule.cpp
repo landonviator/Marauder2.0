@@ -20,10 +20,6 @@ DelayModule::DelayModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProc
 , _feedbackFlatDial("", "", 0.0, 95.0, 0.01, 0.0)
 , _delayLPFlatDial("", "", 20.0, 20000.0, 1.0, 1000.0)
 {
-    addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("String Module");
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
-    
     for (auto& dial : skeuDials)
     {
         addAndMakeVisible(dial);
@@ -62,7 +58,6 @@ void DelayModule::paint (juce::Graphics& g)
     // Paint background
     g.setColour(m_mainCompColor.withAlpha(0.2f));
     g.drawLine(0, getHeight() * 0.125, 0, getHeight() * 0.875, 3);
-    g.drawLine(getWidth() * 0.125, 0, getWidth() * 0.875, 0, 3);
     
     for (auto& dial : skeuDials)
     {
@@ -79,27 +74,25 @@ void DelayModule::paint (juce::Graphics& g)
         updateSliderColors(*dial);
     }
     
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
 }
 
 void DelayModule::resized()
 {
-    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.057));
     
-    const auto dialX = getWidth() * 0.088;
-    const auto dialY = getHeight() * 0.29;
-    const auto flatX = getWidth() * 0.11;
-    const auto flatY = getHeight() * 0.21;
-    const auto xSkeuDialSpace = 1.86;
-    const auto skeuDialSize = getWidth() * 0.18;
-    const auto flatDialSize = getWidth() * 0.24;
-    const auto xFlatDialSpace = 1.3;
+    const auto dialX = getWidth() * 0.24;
+    const auto dialY = getHeight() * 0.16;
+    const auto flatX = getWidth() * 0.24;
+    const auto flatY = getHeight() * 0.16;
+    const auto ySkeuDialSpace = 1.3;
+    const auto skeuDialSize = getWidth() * 0.55;
+    const auto flatDialSize = getWidth() * 0.6;
+    const auto yFlatDialSpace = 1.15;
     
     if (_settingsPage.getUIType())
     {
         _delayDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
-        _feedbackDial.setBounds(_delayDial.getX() + _delayDial.getWidth() * xSkeuDialSpace, dialY, skeuDialSize, skeuDialSize);
-        _delayLPDial.setBounds(_feedbackDial.getX() + _feedbackDial.getWidth() * xSkeuDialSpace, dialY, skeuDialSize, skeuDialSize);
+        _feedbackDial.setBounds(dialX, _delayDial.getY() + _delayDial.getHeight() * ySkeuDialSpace, skeuDialSize, skeuDialSize);
+        _delayLPDial.setBounds(dialX, _feedbackDial.getY() + _feedbackDial.getHeight() * ySkeuDialSpace, skeuDialSize, skeuDialSize);
         activateFlatComps(false);
         activateSkeuComps(true);
     }
@@ -107,8 +100,8 @@ void DelayModule::resized()
     else
     {
         _delayFlatDial.setBounds(flatX, flatY, flatDialSize, flatDialSize);
-        _feedbackFlatDial.setBounds(_delayFlatDial.getX() + _delayFlatDial.getWidth() * xFlatDialSpace, flatY, flatDialSize, flatDialSize);
-        _delayLPFlatDial.setBounds(_feedbackFlatDial.getX() + _feedbackFlatDial.getWidth() * xFlatDialSpace, flatY, flatDialSize, flatDialSize);
+        _feedbackFlatDial.setBounds(flatX, _delayFlatDial.getY() + _delayFlatDial.getHeight() * yFlatDialSpace, flatDialSize, flatDialSize);
+        _delayLPFlatDial.setBounds(flatX, _feedbackFlatDial.getY() + _feedbackFlatDial.getHeight() * yFlatDialSpace, flatDialSize, flatDialSize);
         activateFlatComps(true);
         activateSkeuComps(false);
     }

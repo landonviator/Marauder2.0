@@ -20,10 +20,6 @@ IOModule::IOModule(MarauderAudioProcessor& p, SettingsPage& s) : audioProcessor(
 , _flatInputDial(" dB", "Input", -24.0, 24.0, 0.01, 0.0)
 , _flatOutputDial(" dB", "Output", -24.0, 24.0, 0.01, 0.0)
 {
-    addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("Input-Output");
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
-    
     // Skeu Input
     addAndMakeVisible(_inputDial);
     _inputDial.setDoubleClickReturnValue(true, 0.0);
@@ -85,9 +81,6 @@ void IOModule::paint (juce::Graphics& g)
     
     updateToggleColors(_skeuPhaseToggle);
     updateToggleColors(_skeuHQToggle);
-    
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
-
 }
 
 void IOModule::resized()
@@ -123,8 +116,6 @@ void IOModule::resized()
         activateSkeuComps(false);
         activateFlatComps(true);
     }
-    
-    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
 }
 
 void IOModule::activateSkeuComps(bool shouldBeOn)

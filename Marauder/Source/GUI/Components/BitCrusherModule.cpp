@@ -22,9 +22,6 @@ BitCrusherModule::BitCrusherModule(MarauderAudioProcessor& p, SettingsPage& s) :
 , _driveDialFlat(" dB", "", 0.0, 20.0, 0.01, 0.0)
 , _mixDialFlat(" %", "", 0.0, 100.0, 1.0, 100.0)
 {
-    addAndMakeVisible(_mainBorder);
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
-    
     for (auto& dial : skeuDials)
     {
         addAndMakeVisible(dial);
@@ -62,6 +59,9 @@ BitCrusherModule::~BitCrusherModule()
 
 void BitCrusherModule::paint (juce::Graphics& g)
 {
+    // Paint background
+    g.setColour(m_mainCompColor.withAlpha(0.2f));
+    g.drawLine(0, getHeight(), getWidth(), getHeight(), 3);
     
     for (auto& dial : skeuDials)
     {
@@ -77,23 +77,19 @@ void BitCrusherModule::paint (juce::Graphics& g)
     {
         updateSliderColors(*dial);
     }
-    
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
 }
 
 void BitCrusherModule::resized()
 {
-    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
-    
     const auto dialX = getWidth() * 0.088;
-    const auto dialY = getHeight() * 0.15;
+    const auto dialY = getHeight() * 0.14;
     const auto ySkeuDialSpace = 1.35;
     const auto xSkeuDialSpace = 1.2;
     const auto skeuDialSize = getWidth() * 0.38;
     const auto flatDialSize = getWidth() * 0.45;
     const auto yFlatDialSpace = 1.25;
     const auto flatX = 0;
-    const auto flatY = getHeight() * 0.09;
+    const auto flatY = getHeight() * 0.12;
     
     // Skeuomorphic
     if (_settingsPage.getUIType())

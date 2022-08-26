@@ -30,10 +30,6 @@ MultibandModule::MultibandModule(MarauderAudioProcessor& p, SettingsPage& s) : a
 , _band3FlatMixDial(" %", "Band 3", 0.0, 100.0, 1.0, 100.0)
 , _band4FlatMixDial(" %", "Band 4", 0.0, 100.0, 1.0, 100.0)
 {
-    addAndMakeVisible(_mainBorder);
-    _mainBorder.setText("Multiband Bit-Crusher Module");
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::transparentBlack);
-    
     for (auto& dial : skeuDials)
     {
         addAndMakeVisible(dial);
@@ -108,6 +104,10 @@ MultibandModule::~MultibandModule()
 
 void MultibandModule::paint (juce::Graphics& g)
 {
+    // Paint background
+    g.setColour(m_mainCompColor.withAlpha(0.2f));
+    g.drawLine(0, getHeight() * 0.125, 0, getHeight() * 0.875, 3);
+    
     for (auto& dial : skeuDials)
     {
         dial->updateLabelColor(m_textAccentColor.withLightness(0.75f));
@@ -129,14 +129,10 @@ void MultibandModule::paint (juce::Graphics& g)
     }
     
     updateFlatColors();
-    
-    _mainBorder.setColour(juce::GroupComponent::ColourIds::textColourId, m_textAccentColor.withLightness(0.75f).withAlpha(0.5f));
 }
 
 void MultibandModule::resized()
 {
-    _mainBorder.setBounds(getLocalBounds().withY(getHeight() * 0.015));
-    
     const auto dialX = getWidth() * 0.07;
     const auto dialY = getHeight() * 0.12;
     const auto ySkeuDialSpace = 1.7;

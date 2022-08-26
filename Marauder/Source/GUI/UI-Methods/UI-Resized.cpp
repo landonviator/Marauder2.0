@@ -14,26 +14,28 @@ void MarauderAudioProcessorEditor::uiResized()
         _settingsPage.setBounds(getWidth() * 0.7f, getHeight() * 0.08f, getWidth() * 0.3f, getHeight());
     }
     
-    const int padding = 4;
-    
     // IO Module
     _ioComp.setBounds(0, headerBottomMargin, getWidth() * 0.25, getHeight() - headerBottomMargin);
     _ioComp.resized();
     
+    // Delay Module
+    _delayComp.setBounds(_ioComp.getX() + _ioComp.getWidth(), headerBottomMargin, getWidth() * 0.18, getHeight() - headerBottomMargin);
+    _delayComp.resized();
+    
     // MB Module
-    _multibandComp.setBounds(_ioComp.getX() + _ioComp.getWidth() + padding, headerBottomMargin + padding, getWidth() * 0.25, getHeight() - headerBottomMargin * 2);
+    _multibandComp.setBounds(_delayComp.getX() + _delayComp.getWidth(), headerBottomMargin, getWidth() * 0.25, getHeight() - headerBottomMargin);
     _multibandComp.resized();
     
     // Bit Crusher Module
-    _bitCrusherComp.setBounds(_multibandComp.getX() + _multibandComp.getWidth() + padding, headerBottomMargin + padding, getWidth() * 0.25, _multibandComp.getHeight() * 0.66);
+    _bitCrusherComp.setBounds(_multibandComp.getX() + _multibandComp.getWidth() * 1.12, _multibandComp.getY() * 1.27, getWidth() * 0.25, _multibandComp.getHeight() * 0.6);
     _bitCrusherComp.resized();
     
-    // Delay Module
-    _delayComp.setBounds(_bitCrusherComp.getX(), _bitCrusherComp.getY() + _bitCrusherComp.getHeight() * 1.02, getWidth() * 0.48, _multibandComp.getHeight() * 0.33);
-    _delayComp.resized();
     
     // Filter Module
-    _filterComp.setBounds(_bitCrusherComp.getX() + _bitCrusherComp.getWidth(), _bitCrusherComp.getY(), getWidth() * 0.19, _bitCrusherComp.getHeight());
+    _filterComp.setBounds(_bitCrusherComp.getX(),
+                          _bitCrusherComp.getY() + _bitCrusherComp.getHeight() * 1.03,
+                          getWidth() * 0.28,
+                          getHeight() * 0.35);
     _filterComp.resized();
     
     // Save Plugin Window Size

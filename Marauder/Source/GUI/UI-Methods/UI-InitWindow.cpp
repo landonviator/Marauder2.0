@@ -12,19 +12,19 @@ void MarauderAudioProcessorEditor::initWindow()
     
     if (r.getWidth() <= 1920)
     {
-        width = x * 0.8;
+        width = x * 0.7;
     }
     
     else
     {
-        width = x * 0.45f;
+        width = x * 0.4;
     }
     
     auto height = width * 0.5;
     
     //Making the window resizable by aspect ratio and setting size
     AudioProcessorEditor::setResizable(true, true);
-    AudioProcessorEditor::setResizeLimits(width * 0.75, height * 0.75, width * 1.25, height * 1.25);
+    AudioProcessorEditor::setResizeLimits(width * 0.5, height * 0.5, width * 1.25, height * 1.25);
     AudioProcessorEditor::getConstrainer()->setFixedAspectRatio(2.0);
     
     if (audioProcessor.windowWidth != 0.0)
