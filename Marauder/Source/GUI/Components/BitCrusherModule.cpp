@@ -86,10 +86,10 @@ void BitCrusherModule::resized()
     const auto ySkeuDialSpace = 1.35;
     const auto xSkeuDialSpace = 1.2;
     const auto skeuDialSize = getWidth() * 0.38;
-    const auto flatDialSize = getWidth() * 0.45;
-    const auto yFlatDialSpace = 1.25;
+    const auto flatDialSize = getWidth() * 0.41;
+    const auto yFlatDialSpace = 1.2;
     const auto flatX = 0;
-    const auto flatY = getHeight() * 0.12;
+    const auto flatY = getHeight() * 0.175;
     
     // Skeuomorphic
     if (_settingsPage.getUIType())

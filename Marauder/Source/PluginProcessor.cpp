@@ -352,24 +352,11 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     // Input
     _inputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
     
+    processDelay(block);
+    
     _aliasFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     _marauder.processBuffer(buffer);
     _artifactFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
-    
-    
-    for (int ch = 0; ch < block.getNumChannels(); ++ch)
-    {
-        float* data = block.getChannelPointer(ch);
-                
-        for (int sample = 0; sample < block.getNumSamples(); ++sample)
-        {
-            auto input = data[sample] - lastDelayOutput[ch];
-            linear.pushSample (int (ch), input);
-            linear.setDelay (delayAmount.getNextValue());
-            data[sample] += linear.popSample ((int) ch);
-            lastDelayOutput[ch] = _feedbackLPFilter.processSample(data[sample], ch) * _treeState.getRawParameterValue(feedbackID)->load();
-        }
-    }
     
     _hpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
     _lpFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
@@ -385,6 +372,23 @@ void MarauderAudioProcessor::normalProcessBlock(juce::AudioBuffer<float> &buffer
     
     // Output
     _outputGainModule.process(juce::dsp::ProcessContextReplacing<float>(block));
+}
+
+void MarauderAudioProcessor::processDelay(juce::dsp::AudioBlock<float>& block)
+{
+    for (int ch = 0; ch < block.getNumChannels(); ++ch)
+    {
+        float* data = block.getChannelPointer(ch);
+        
+        for (int sample = 0; sample < block.getNumSamples(); ++sample)
+        {
+            auto input = data[sample] - lastDelayOutput[ch];
+            linear.pushSample (int (ch), input);
+            linear.setDelay (delayAmount.getNextValue());
+            data[sample] += linear.popSample ((int) ch);
+            lastDelayOutput[ch] = _feedbackLPFilter.processSample(data[sample], ch) * _treeState.getRawParameterValue(feedbackID)->load();
+        }
+    }
 }
 
 //==============================================================================

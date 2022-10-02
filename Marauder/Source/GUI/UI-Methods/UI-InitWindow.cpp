@@ -17,7 +17,7 @@ void MarauderAudioProcessorEditor::initWindow()
     
     else
     {
-        width = x * 0.4;
+        width = x * 0.3;
     }
     
     auto height = width * 0.5;

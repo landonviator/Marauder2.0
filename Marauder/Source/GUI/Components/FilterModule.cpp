@@ -84,16 +84,16 @@ void FilterModule::resized()
     
     if (_settingsPage.getUIType())
     {
-        _lpDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
-        _hpDial.setBounds(_lpDial.getX() + _lpDial.getWidth() * ySkeuDialSpace, _lpDial.getY(), skeuDialSize, skeuDialSize);
+        _hpDial.setBounds(dialX, dialY, skeuDialSize, skeuDialSize);
+        _lpDial.setBounds(_hpDial.getX() + _hpDial.getWidth() * ySkeuDialSpace, _hpDial.getY(), skeuDialSize, skeuDialSize);
         activateFlatComps(false);
         activateSkeuComps(true);
     }
     
     else
     {
-        _lpFlatDial.setBounds(flatX, flatY, flatDialSize, flatDialSize);
-        _hpFlatDial.setBounds(_lpFlatDial.getX() + _lpFlatDial.getWidth() * yFlatDialSpace, _lpFlatDial.getY(), flatDialSize, flatDialSize);
+        _hpFlatDial.setBounds(flatX, flatY, flatDialSize, flatDialSize);
+        _lpFlatDial.setBounds(_hpFlatDial.getX() + _hpFlatDial.getWidth() * yFlatDialSpace, _hpFlatDial.getY(), flatDialSize, flatDialSize);
         activateFlatComps(true);
         activateSkeuComps(false);
     }

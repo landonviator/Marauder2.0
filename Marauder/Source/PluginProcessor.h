@@ -95,6 +95,7 @@ private:
     std::array<juce::LinearSmoothedValue<float>, 2> delayFeedbackVolume;
     juce::SmoothedValue<float> delayAmount;
     viator_dsp::SVFilter<float> _feedbackLPFilter;
+    void processDelay(juce::dsp::AudioBlock<float>& block);
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MarauderAudioProcessor)
